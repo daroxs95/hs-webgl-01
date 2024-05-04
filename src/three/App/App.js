@@ -1,24 +1,32 @@
-import {PerspectiveCamera, Scene, WebGLRenderer} from "three";
+import {PCFSoftShadowMap, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import Stats from "stats.js";
+import {Resources} from "./Resources/Resources";
 
 export default class App {
     _gl
     _camera
     _scene
     _stats
+    _resources
 
-    constructor() {
+    constructor(assets) {
         this.init();
+        this._resources = new Resources(assets);
     }
 
     init() {
         this._gl = new WebGLRenderer({
             canvas: document.querySelector('#canvas'),
+            antialias: true
         });
 
         this._gl.setSize(window.innerWidth, window.innerHeight);
         const aspectRatio = window.innerWidth / window.innerHeight;
         this._camera = new PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+
+        // With shadows
+        this._gl.shadowMap.enabled = true;
+        this._gl.shadowMap.type = PCFSoftShadowMap;
 
         this._scene = new Scene();
 
@@ -26,6 +34,10 @@ export default class App {
         document.body.appendChild(this._stats.dom);
 
         this.handleEvents();
+    }
+
+    async load() {
+        await this._resources.load();
     }
 
     render() {
@@ -55,7 +67,11 @@ export default class App {
         return this._camera;
     }
 
-    getGlConteext() {
+    getGlContext() {
         return this._gl;
+    }
+
+    getResources() {
+        return this._resources;
     }
 }
