@@ -15,5 +15,9 @@ npm run dev
 - request animation frame render
 - statsjs
 - orbit controls
+- Basic lighting
+- Model loading
+- Basic shadows
+- Non visible env map
 
 ![img.png](doc/img.png)
