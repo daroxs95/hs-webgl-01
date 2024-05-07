@@ -1,4 +1,4 @@
-import App from "./App/App";
+import App from "./App/Framework/App";
 import {
     AmbientLight,
     DirectionalLight,
@@ -8,8 +8,10 @@ import {resources} from "./App/assets";
 import {Astronaut} from "./App/GameObjects/Astronaut";
 import {Rocket} from "./App/GameObjects/Rocket";
 import {Planet} from "./App/GameObjects/Planet";
+import {Postprocessing} from "./App/Postprocessing";
+import {Camera} from "./App/GameObjects/Camera";
 
-const app = new App(resources);
+const app = new App(resources, Postprocessing);
 
 const progressElem = document.querySelector('#progress');
 const loadingElem = document.querySelector('#loading');
@@ -24,6 +26,7 @@ app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
 
 await app.loadResources();
 app.prepModelsAndAnimations();
+app.registerGameObject(new Camera(app.getCamera()));
 app.registerGameObject(new Astronaut(app));
 app.registerGameObject(new Rocket(app));
 app.registerGameObject(new Planet(app));
@@ -58,10 +61,6 @@ directionalLight.shadow.mapSize.set(2048, 2048);
 // app.getScene().background = envMap;
 // app.getScene().environment = envMap;
 
-// update camera pos
-app.getCamera().position.z = 2;
-app.getCamera().position.y = 2;
-app.getCamera().position.x = 1;
 
 new OrbitControls(app.getCamera(), app.getGlContext().domElement);
 

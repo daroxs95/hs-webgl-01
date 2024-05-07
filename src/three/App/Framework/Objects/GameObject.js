@@ -18,6 +18,6 @@ export class GameObject {
         this._model = this._resource.scene;
     };
 
-    onUpdate() {
+    onUpdate(deltaTime) {
     };
 }

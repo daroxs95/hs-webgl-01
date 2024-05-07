@@ -1,6 +1,6 @@
-import {GameObject} from "../Resources/Objects/GameObject";
+import {GameObjectAnimated} from "../Framework";
 
-export class Planet extends GameObject {
+export class Planet extends GameObjectAnimated {
     constructor(app) {
         super(app, 'planet');
         this._mixer = null;
@@ -8,6 +8,6 @@ export class Planet extends GameObject {
 
     onLoad() {
         super.onLoad();
-        this._model.position.set(0, -11, 0);
+        this._model.position.set(0, -11.16, 0);
     }
 }

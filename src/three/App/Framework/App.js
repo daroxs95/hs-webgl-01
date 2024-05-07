@@ -1,7 +1,7 @@
-import {Clock, LoadingManager, Object3D, PCFSoftShadowMap, PerspectiveCamera, Scene, WebGLRenderer} from "three";
+import {Clock, LoadingManager, PCFSoftShadowMap, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import Stats from "stats.js";
-import {Resources} from "./Resources/Resources";
-import {prepModelAndAnimations} from "./Resources/Animations";
+import {Resources} from "./Resources";
+import {prepModelAndAnimations} from "./Animations";
 
 export default class App {
     _gl
@@ -12,18 +12,29 @@ export default class App {
     _manager
     _mixers
     _clock
+    _gameObjects
+    _composer
+    _renderer
 
-    constructor(assets) {
+    constructor(assets, Composer) {
         this.init();
         this._resources = new Resources(assets, this._manager);
         this._gameObjects = [];
+        this._composer = Composer ? new Composer(this._gl, this._scene, this._camera) : null;
+        this._renderer = this._composer ?? this._gl;
+        this.resize();
     }
 
     init() {
         this._gl = new WebGLRenderer({
-            canvas: document.querySelector('#canvas'), antialias: true
+            // powerPreference: "high-performance",
+            canvas: document.querySelector('#canvas'),
+            antialias: window.devicePixelRatio <= 1,
+            stencil: true,
+            depth: true
         });
 
+        // Renderer
         this._gl.setSize(window.innerWidth, window.innerHeight);
         const aspectRatio = window.innerWidth / window.innerHeight;
         this._camera = new PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -32,6 +43,7 @@ export default class App {
         this._gl.shadowMap.enabled = true;
         this._gl.shadowMap.type = PCFSoftShadowMap;
 
+        // Scene
         this._scene = new Scene();
 
         // Stats
@@ -45,7 +57,6 @@ export default class App {
         this._clock = new Clock();
 
         this.handleEvents();
-
     }
 
     async loadResources() {
@@ -61,16 +72,19 @@ export default class App {
     render() {
         this._stats.begin();
         const deltaTime = this._clock.getDelta();
-        this._gl.render(this._scene, this._camera);
+        this._renderer.render(this._scene, this._camera);
         for (const mixer of this._mixers) {
             mixer.update(deltaTime);
+        }
+        for (const gameObject of this._gameObjects) {
+            gameObject.onUpdate(deltaTime)
         }
         this._stats.end();
         window.requestAnimationFrame(() => this.render());
     }
 
     resize() {
-        this._gl.setSize(window.innerWidth, window.innerHeight);
+        this._renderer.setSize(window.innerWidth, window.innerHeight);
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
     }
