@@ -7,9 +7,40 @@
 
 <body>
 <canvas id="canvas"></canvas>
+<div id="loading">
+    <div>
+        <div id="progress">
+            0%
+        </div>
+    </div>
+</div>
 </body>
 
 <style>
+    body {
+        position: relative;
+    }
+
+    #loading {
+        position: absolute;
+        background: #303840;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s;
+        pointer-events: none;
+    }
+
+    #progress {
+        color: white;
+        font-size: 3rem;
+        font-family: monospace;
+    }
+
     * {
         margin: 0;
         padding: 0;
