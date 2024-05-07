@@ -6,7 +6,8 @@ export class Camera {
     _app
     _mouse = {x: 0, y: 0}
     _initialPosition = {x: 0, y: 1.1, z: 2.5}
-    _moveSpeed = 0.5
+    _moveSpeed = 10
+    _moveAmount = 0.25
     _orbitControls
 
     constructor(app) {
@@ -25,12 +26,12 @@ export class Camera {
 
     onUpdate(deltaTime) {
         // rotate camera pivoting from 0.0.0 based on mouse position clamped to only some small movement and deltaTime
-        const new_x = this._initialPosition.x + this._mouse.x * this._moveSpeed;
-        const new_y = this._initialPosition.y + this._mouse.y * this._moveSpeed;
+        const new_x = this._initialPosition.x + this._mouse.x * this._moveAmount;
+        const new_y = this._initialPosition.y + this._mouse.y * this._moveAmount;
         const new_z = this._initialPosition.z;
-        this._camera.position.x = lerp(this._camera.position.x, new_x, deltaTime);
-        this._camera.position.y = lerp(this._camera.position.y, new_y, deltaTime);
-        this._camera.position.z = lerp(this._camera.position.z, new_z, deltaTime);
+        this._camera.position.x = lerp(this._camera.position.x, new_x, deltaTime * this._moveSpeed);
+        this._camera.position.y = lerp(this._camera.position.y, new_y, deltaTime * this._moveSpeed);
+        this._camera.position.z = lerp(this._camera.position.z, new_z, deltaTime * this._moveSpeed);
         this._camera.lookAt(0, 0, 0);
     }
 
