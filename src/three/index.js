@@ -3,7 +3,6 @@ import {
     AmbientLight,
     DirectionalLight,
 } from "three";
-import {OrbitControls} from "three/addons";
 import {resources} from "./App/assets";
 import {Astronaut} from "./App/GameObjects/Astronaut";
 import {Rocket} from "./App/GameObjects/Rocket";
@@ -26,7 +25,7 @@ app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
 
 await app.loadResources();
 app.prepModelsAndAnimations();
-app.registerGameObject(new Camera(app.getCamera()));
+app.registerGameObject(new Camera(app));
 app.registerGameObject(new Astronaut(app));
 app.registerGameObject(new Rocket(app));
 app.registerGameObject(new Planet(app));
@@ -60,9 +59,6 @@ directionalLight.shadow.mapSize.set(2048, 2048);
 // pmremGenerator.dispose();
 // app.getScene().background = envMap;
 // app.getScene().environment = envMap;
-
-
-new OrbitControls(app.getCamera(), app.getGlContext().domElement);
 
 app.render();
 
