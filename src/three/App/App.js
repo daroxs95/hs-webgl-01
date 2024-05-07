@@ -1,6 +1,7 @@
-import {PCFSoftShadowMap, PerspectiveCamera, Scene, WebGLRenderer} from "three";
+import {Clock, LoadingManager, Object3D, PCFSoftShadowMap, PerspectiveCamera, Scene, WebGLRenderer} from "three";
 import Stats from "stats.js";
 import {Resources} from "./Resources/Resources";
+import {prepModelAndAnimations} from "./Resources/Animations";
 
 export default class App {
     _gl
@@ -8,16 +9,19 @@ export default class App {
     _scene
     _stats
     _resources
+    _manager
+    _mixers
+    _clock
 
     constructor(assets) {
         this.init();
-        this._resources = new Resources(assets);
+        this._resources = new Resources(assets, this._manager);
+        this._gameObjects = [];
     }
 
     init() {
         this._gl = new WebGLRenderer({
-            canvas: document.querySelector('#canvas'),
-            antialias: true
+            canvas: document.querySelector('#canvas'), antialias: true
         });
 
         this._gl.setSize(window.innerWidth, window.innerHeight);
@@ -30,19 +34,37 @@ export default class App {
 
         this._scene = new Scene();
 
+        // Stats
         this._stats = new Stats();
         document.body.appendChild(this._stats.dom);
 
+        // Loading manager
+        this._manager = new LoadingManager();
+
+        this._mixers = [];
+        this._clock = new Clock();
+
         this.handleEvents();
+
     }
 
-    async load() {
+    async loadResources() {
         await this._resources.load();
+    }
+
+    load() {
+        for (let gameObject of this._gameObjects) {
+            gameObject.onLoad();
+        }
     }
 
     render() {
         this._stats.begin();
+        const deltaTime = this._clock.getDelta();
         this._gl.render(this._scene, this._camera);
+        for (const mixer of this._mixers) {
+            mixer.update(deltaTime);
+        }
         this._stats.end();
         window.requestAnimationFrame(() => this.render());
     }
@@ -73,5 +95,36 @@ export default class App {
 
     getResources() {
         return this._resources;
+    }
+
+    getManager() {
+        return this._manager;
+    }
+
+    addModelToScene = (name = false) => {
+        const model = this._resources.get(name);
+
+        model.scene.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
+        this._scene.add(model.scene);
+        return model;
+    }
+
+    prepModelsAndAnimations() {
+        for (let value of this._resources.getAll().values()) {
+            prepModelAndAnimations(value);
+        }
+    }
+
+    getMixers() {
+        return this._mixers;
+    }
+
+    registerGameObject(gameObject) {
+        this._gameObjects.push(gameObject);
     }
 }
