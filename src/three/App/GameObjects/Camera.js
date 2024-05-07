@@ -7,6 +7,7 @@ export class Camera {
     _mouse = {x: 0, y: 0}
     _initialPosition = {x: 0, y: 1.1, z: 2.5}
     _moveSpeed = 0.5
+    _orbitControls
 
     constructor(app) {
         this._app = app;
@@ -16,8 +17,10 @@ export class Camera {
     onLoad() {
         this._camera.position.set(this._initialPosition.x, this._initialPosition.y, this._initialPosition.z);
         this._camera.lookAt(0, 0, 0);
-        new OrbitControls(this._camera, this._app.getGlContext().domElement);
-        window.addEventListener('pointermove', e => this.onMouseMove(e))
+        this._orbitControls = new OrbitControls(this._camera, this._app.getGlContext().domElement);
+        this._orbitControls.enabled = false;
+        window.addEventListener('pointermove', e => this.onMouseMove(e));
+        window.addEventListener('keyup', e => this.onKeyUp(e));
     }
 
     onUpdate(deltaTime) {
@@ -34,5 +37,11 @@ export class Camera {
     onMouseMove(e) {
         this._mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         this._mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    onKeyUp(e) {
+        if (e.key === "c") {
+            this._orbitControls.enabled = !this._orbitControls.enabled;
+        }
     }
 }
