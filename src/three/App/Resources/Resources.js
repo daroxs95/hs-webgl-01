@@ -1,5 +1,5 @@
 import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
-import {TextureLoader} from "three";
+import {TextureLoader, LoadingManager} from "three";
 import {RGBELoader} from "three/addons/loaders/RGBELoader.js";
 
 export class Resources {
@@ -11,19 +11,24 @@ export class Resources {
     /**
      *
      * @param assets {Array<{key: string, type: string, url: string}>}
+     * @param manager {LoadingManager}
      */
-    constructor(assets) {
+    constructor(assets, manager = undefined) {
         this._resources = new Map;
         this._loaders = {
-            gltf: new GLTFLoader(),
-            texture: new TextureLoader(),
-            rgbe: new RGBELoader(),
+            gltf: new GLTFLoader(manager),
+            texture: new TextureLoader(manager),
+            rgbe: new RGBELoader(manager),
         }
         this._assets = assets;
     }
 
     get(name) {
         return this._resources.get(name);
+    }
+
+    getAll() {
+        return this._resources;
     }
 
     register(name, resource) {
