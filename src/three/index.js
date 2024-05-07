@@ -2,43 +2,33 @@ import App from "./App/App";
 import {
     AmbientLight,
     DirectionalLight,
-    PMREMGenerator
 } from "three";
 import {OrbitControls} from "three/addons";
 import {resources} from "./App/assets";
+import {Astronaut} from "./App/GameObjects/Astronaut";
+import {Rocket} from "./App/GameObjects/Rocket";
+import {Planet} from "./App/GameObjects/Planet";
 
 const app = new App(resources);
 
-await app.load();
+const progressElem = document.querySelector('#progress');
+const loadingElem = document.querySelector('#loading');
+app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
+    progressElem.innerHTML = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+    if (itemsLoaded === itemsTotal) {
+        setTimeout(() => {
+            loadingElem.style.opacity = 0;
+        }, 500);
+    }
+};
 
-const addSceneModel = (name) => {
-    const model = app.getResources().get(name);
-    model.scene.castShadow = true;
-    model.scene.receiveShadow = true;
-    model.scene.traverse((child) => {
-        if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        }
-    });
-    app.getScene().add(model.scene);
-    return model;
-}
+await app.loadResources();
+app.prepModelsAndAnimations();
+app.registerGameObject(new Astronaut(app));
+app.registerGameObject(new Rocket(app));
+app.registerGameObject(new Planet(app));
+app.load();
 
-const model = addSceneModel('astronaut');
-model.scene.scale.set(0.1, 0.1, 0.1);
-model.scene.position.set(0, -0.08, 0);
-
-const rocket = addSceneModel('rocket');
-rocket.scene.scale.set(0.003, 0.003, 0.003);
-rocket.scene.position.set(-2, -0.3, -2);
-//rotate rocket 2 degrees
-rocket.scene.rotation.z = Math.PI * 0.06;
-rocket.scene.rotation.x = Math.PI * -0.06;
-
-// add planet
-const planet = addSceneModel('planet');
-planet.scene.position.set(0, -11, 0);
 
 // light
 app.getScene().add(new AmbientLight(0xfefefe, 2));
@@ -60,13 +50,13 @@ directionalLight.shadow.mapSize.set(2048, 2048);
 // app.getScene().add(new CameraHelper(directionalLight.shadow.camera));
 
 // env map
-const hdrTexture = app.getResources().get("space");
-const pmremGenerator = new PMREMGenerator(app.getGlContext());
-pmremGenerator.compileEquirectangularShader();
-const envMap = pmremGenerator.fromEquirectangular(hdrTexture).texture;
-pmremGenerator.dispose();
+// const hdrTexture = app.getResources().get("mars");
+// const pmremGenerator = new PMREMGenerator(app.getGlContext());
+// pmremGenerator.compileEquirectangularShader();
+// const envMap = pmremGenerator.fromEquirectangular(hdrTexture).texture;
+// pmremGenerator.dispose();
 // app.getScene().background = envMap;
-app.getScene().environment = envMap;
+// app.getScene().environment = envMap;
 
 // update camera pos
 app.getCamera().position.z = 2;
