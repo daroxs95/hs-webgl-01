@@ -7,6 +7,9 @@
 
 <body>
 <canvas id="canvas"></canvas>
+<div id="tutorial">
+    Press C to enable orbit controls
+</div>
 <div id="loading">
     <div>
         <div id="progress">
@@ -50,6 +53,15 @@
     canvas {
         width: 100vw;
         height: 100vh;
+    }
+
+    #tutorial {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 1rem;
+        color: white;
+        font-family: monospace;
     }
 </style>
 </html>

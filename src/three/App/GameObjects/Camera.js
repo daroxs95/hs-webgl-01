@@ -9,6 +9,7 @@ export class Camera {
     _moveSpeed = 10
     _moveAmount = 0.25
     _orbitControls
+    _controlEnabled = true
 
     constructor(app) {
         this._app = app;
@@ -19,20 +20,21 @@ export class Camera {
         this._camera.position.set(this._initialPosition.x, this._initialPosition.y, this._initialPosition.z);
         this._camera.lookAt(0, 0, 0);
         this._orbitControls = new OrbitControls(this._camera, this._app.getGlContext().domElement);
-        this._orbitControls.enabled = false;
+        this._orbitControls.enabled = !this._controlEnabled;
         window.addEventListener('pointermove', e => this.onMouseMove(e));
         window.addEventListener('keyup', e => this.onKeyUp(e));
     }
 
     onUpdate(deltaTime) {
-        // rotate camera pivoting from 0.0.0 based on mouse position clamped to only some small movement and deltaTime
-        const new_x = this._initialPosition.x + this._mouse.x * this._moveAmount;
-        const new_y = this._initialPosition.y + this._mouse.y * this._moveAmount;
-        const new_z = this._initialPosition.z;
-        this._camera.position.x = lerp(this._camera.position.x, new_x, deltaTime * this._moveSpeed);
-        this._camera.position.y = lerp(this._camera.position.y, new_y, deltaTime * this._moveSpeed);
-        this._camera.position.z = lerp(this._camera.position.z, new_z, deltaTime * this._moveSpeed);
-        this._camera.lookAt(0, 0, 0);
+        if (this._controlEnabled) {
+            const new_x = this._initialPosition.x + this._mouse.x * this._moveAmount;
+            const new_y = this._initialPosition.y + this._mouse.y * this._moveAmount;
+            const new_z = this._initialPosition.z;
+            this._camera.position.x = lerp(this._camera.position.x, new_x, deltaTime * this._moveSpeed);
+            this._camera.position.y = lerp(this._camera.position.y, new_y, deltaTime * this._moveSpeed);
+            this._camera.position.z = lerp(this._camera.position.z, new_z, deltaTime * this._moveSpeed);
+            this._camera.lookAt(0, 0, 0);
+        }
     }
 
     onMouseMove(e) {
@@ -42,7 +44,8 @@ export class Camera {
 
     onKeyUp(e) {
         if (e.key === "c") {
-            this._orbitControls.enabled = !this._orbitControls.enabled;
+            this._controlEnabled = !this._controlEnabled;
+            this._orbitControls.enabled = !this._controlEnabled;
         }
     }
 }
