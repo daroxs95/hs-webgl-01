@@ -13,7 +13,7 @@ export class Postprocessing {
     this._gl = gl;
     this._scene = scene;
     this._camera = camera;
-    this.onLoad();
+    // this.onLoad();
   }
 
   onLoad() {

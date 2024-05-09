@@ -30,6 +30,7 @@ export default class App {
     this._composer = Composer
       ? new Composer(this._gl, this._scene, this._camera)
       : null;
+    this._composer.onLoad();
     this._renderer = this._composer ?? this._gl;
     this.resize();
   }
@@ -88,6 +89,7 @@ export default class App {
     for (const gameObject of this._gameObjects) {
       gameObject.onUpdate(deltaTime);
     }
+    this._composer?.onUpdate(deltaTime);
     this._stats.end();
     window.requestAnimationFrame(() => this.render());
   }
@@ -153,5 +155,9 @@ export default class App {
 
   getTime() {
     return this._clock.getElapsedTime();
+  }
+
+  getComposer() {
+    return this._composer;
   }
 }

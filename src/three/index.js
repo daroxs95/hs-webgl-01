@@ -30,7 +30,7 @@ const objects = [
   new Rocket(app),
   new Rose(app),
   new Star(app),
-  new Alien(app)
+  new Alien(app),
 ];
 for (const object of objects) {
   app.registerGameObject(object);
