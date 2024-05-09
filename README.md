@@ -27,3 +27,8 @@ npm run dev
 - Animations
 
 ![img.png](doc/img.png)
+
+## TODO
+
+- [ ] Add motion blur
+- [ ] Add abstraction for mouse and keys input

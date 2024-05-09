@@ -1,44 +1,51 @@
 import App from "./App/Framework/App";
-import {
-    AmbientLight,
-    DirectionalLight,
-} from "three";
-import {resources} from "./App/assets";
-import {Astronaut} from "./App/GameObjects/Astronaut";
-import {Rocket} from "./App/GameObjects/Rocket";
-import {Planet} from "./App/GameObjects/Planet";
-import {Postprocessing} from "./App/Postprocessing";
-import {Camera} from "./App/GameObjects/Camera";
+import { AmbientLight, DirectionalLight } from "three";
+import { resources } from "./App/assets";
+import { Astronaut } from "./App/GameObjects/Astronaut";
+import { Rocket } from "./App/GameObjects/Rocket";
+import { Planet } from "./App/GameObjects/Planet/Planet";
+import { Postprocessing } from "./App/Postprocessing";
+import { Camera } from "./App/GameObjects/Camera";
+import { Rose } from "./App/GameObjects/Rose";
+import { Star } from "./App/GameObjects/Star";
+import { Alien } from "./App/GameObjects/Alien";
 
 const app = new App(resources, Postprocessing);
 
-const progressElem = document.querySelector('#progress');
-const loadingElem = document.querySelector('#loading');
+const progressElem = document.querySelector("#progress");
+const loadingElem = document.querySelector("#loading");
 app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
-    progressElem.innerHTML = `${itemsLoaded / itemsTotal * 100 | 0}%`;
-    if (itemsLoaded === itemsTotal) {
-        setTimeout(() => {
-            loadingElem.style.opacity = 0;
-        }, 500);
-    }
+  progressElem.innerHTML = `${((itemsLoaded / itemsTotal) * 100) | 0}%`;
+  if (itemsLoaded === itemsTotal) {
+    setTimeout(() => {
+      loadingElem.style.opacity = 0;
+    }, 500);
+  }
 };
 
 await app.loadResources();
 app.prepModelsAndAnimations();
-app.registerGameObject(new Camera(app));
-app.registerGameObject(new Astronaut(app));
-app.registerGameObject(new Rocket(app));
+const objects = [
+  new Astronaut(app),
+  new Rocket(app),
+  new Rose(app),
+  new Star(app),
+  new Alien(app)
+];
+for (const object of objects) {
+  app.registerGameObject(object);
+}
+app.registerGameObject(new Camera(app, objects));
 app.registerGameObject(new Planet(app));
 app.load();
 
-
 // light
-app.getScene().add(new AmbientLight(0xfefefe, 2));
+app.getScene().add(new AmbientLight(0xfefefe, 0.2));
 const directionalLight = new DirectionalLight(0xffffff, 4);
 directionalLight.position.set(15, 20, 0);
 directionalLight.castShadow = true;
 app.getScene().add(directionalLight);
-directionalLight.lookAt(0, 0, 0)
+directionalLight.lookAt(0, 0, 0);
 directionalLight.shadow.camera.top = 10;
 directionalLight.shadow.camera.bottom = -10;
 directionalLight.shadow.camera.left = -10;
@@ -61,4 +68,3 @@ directionalLight.shadow.mapSize.set(2048, 2048);
 // app.getScene().environment = envMap;
 
 app.render();
-
