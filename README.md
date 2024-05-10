@@ -25,6 +25,8 @@ npm run dev
 - Camera interactivity
 - Custom game object abstractions
 - Animations
+- Slider between scene objects
+- Camera speed based chromatic aberration
 
 ![img.png](doc/img.png)
 
@@ -32,3 +34,4 @@ npm run dev
 
 - [ ] Add motion blur
 - [ ] Add abstraction for mouse and keys input
+- [ ] Move camera following planet orbit
