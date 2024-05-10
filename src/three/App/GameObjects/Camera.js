@@ -6,7 +6,7 @@ export class Camera {
   _camera;
   _app;
   _mouse = { x: 0, y: 0 };
-  _initialPosition = { x: 0, y: 12.26, z: 2.5 };
+  _initialPosition = { x: 0, y: 300, z: 2.5 };
   _moveSpeed = 8;
   _moveAmount = 0.25;
   _orbitControls;
