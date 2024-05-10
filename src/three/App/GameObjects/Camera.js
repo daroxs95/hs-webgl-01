@@ -35,6 +35,15 @@ export class Camera {
     this._orbitControls.enabled = !this._controlEnabled;
     window.addEventListener("pointermove", (e) => this.onMouseMove(e));
     window.addEventListener("keyup", (e) => this.onKeyUp(e));
+
+    const prevBtn = document.querySelector("#slider-prev");
+    prevBtn.addEventListener("click", () => {
+      this.focusPrev();
+    });
+    const nextBtn = document.querySelector("#slider-next");
+    nextBtn.addEventListener("click", () => {
+      this.focusNext();
+    });
   }
 
   onUpdate(deltaTime) {
@@ -89,6 +98,20 @@ export class Camera {
     }
   }
 
+  focusNext() {
+    const index = this._focusObjects.indexOf(this._focusObject);
+    this._focusObject =
+      this._focusObjects[(index + 1) % this._focusObjects.length];
+  }
+
+  focusPrev() {
+    const index = this._focusObjects.indexOf(this._focusObject);
+    this._focusObject =
+      this._focusObjects[
+        (index - 1 + this._focusObjects.length) % this._focusObjects.length
+      ];
+  }
+
   onMouseMove(e) {
     this._mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     this._mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -102,9 +125,7 @@ export class Camera {
 
     // change focusObject
     if (e.key === "f") {
-      const index = this._focusObjects.indexOf(this._focusObject);
-      this._focusObject =
-        this._focusObjects[(index + 1) % this._focusObjects.length];
+      this.focusNext();
     }
   }
 }

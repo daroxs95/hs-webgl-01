@@ -5,7 +5,7 @@ import {
   NoiseEffect,
   EffectComposer,
   BloomEffect,
-  ChromaticAberrationEffect
+  ChromaticAberrationEffect,
 } from "postprocessing";
 import { FloatType } from "three";
 import { lerp, smoothstep } from "three/src/math/MathUtils";
@@ -18,7 +18,7 @@ export class Postprocessing extends BasePostprocessing {
 
   onLoad() {
     this._composer = new EffectComposer(this._gl, {
-      frameBufferType: FloatType
+      frameBufferType: FloatType,
     });
     const renderPass = new RenderPass(this._scene, this._camera);
 
@@ -38,8 +38,8 @@ export class Postprocessing extends BasePostprocessing {
         levels: 1,
         luminanceThreshold: 0.9,
         luminanceSmoothing: 0.75,
-        intensity: 0.25
-      })
+        intensity: 0.25,
+      }),
     );
     this._composer.addPass(renderPass);
     this._composer.addPass(effectPass);
@@ -59,13 +59,12 @@ export class Postprocessing extends BasePostprocessing {
     this._caEffect.offset.x = lerp(
       this._caEffect.offset.x,
       ammount,
-      deltaTime * this._dampFactor
+      deltaTime * this._dampFactor,
     );
     this._caEffect.offset.y = lerp(
       this._caEffect.offset.y,
       ammount,
-      deltaTime * this._dampFactor
+      deltaTime * this._dampFactor,
     );
-    console.log(this._cameraSpeed, ammount);
   }
 }
