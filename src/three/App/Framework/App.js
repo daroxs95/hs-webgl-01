@@ -4,7 +4,7 @@ import {
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
-  WebGLRenderer,
+  WebGLRenderer
 } from "three";
 import Stats from "stats.js";
 import { Resources } from "./Resources";
@@ -41,12 +41,18 @@ export default class App {
       canvas: document.querySelector("#canvas"),
       antialias: window.devicePixelRatio <= 1,
       stencil: true,
-      depth: true,
+      depth: true
     });
 
     // Renderer
     this._gl.setSize(window.innerWidth, window.innerHeight);
     const aspectRatio = window.innerWidth / window.innerHeight;
+
+    if (window.devicePixelRatio > 1) {
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      this._gl.setPixelRatio(dpr);
+    }
+
     this._camera = new PerspectiveCamera(75, aspectRatio, 0.1, 1000);
 
     // With shadows
