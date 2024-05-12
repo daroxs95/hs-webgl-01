@@ -6,14 +6,15 @@ export class Camera {
   _camera;
   _app;
   _mouse = { x: 0, y: 0 };
-  _initialPosition = { x: 0, y: 300, z: 2.5 };
-  _moveSpeed = 8;
+  _initialPosition = { x: 0, y: 5500, z: 2.5 };
+  _moveSpeed = 2;
   _moveAmount = 0.25;
   _orbitControls;
   _controlEnabled = true;
   _focusObject;
   _focusObjects;
   _realSpeed = 0;
+  _isInsideOrbit = false;
 
   constructor(app, focusObjects) {
     this._app = app;
@@ -26,11 +27,11 @@ export class Camera {
     this._camera.position.set(
       this._initialPosition.x,
       this._initialPosition.y,
-      this._initialPosition.z,
+      this._initialPosition.z
     );
     this._orbitControls = new OrbitControls(
       this._camera,
-      this._app.getGlContext().domElement,
+      this._app.getGlContext().domElement
     );
     this._orbitControls.enabled = !this._controlEnabled;
     window.addEventListener("pointermove", (e) => this.onMouseMove(e));
@@ -47,8 +48,8 @@ export class Camera {
   }
 
   onUpdate(deltaTime) {
+    const cameraLastPos = this._camera.position.clone();
     if (this._controlEnabled) {
-      const cameraLastPos = this._camera.position.clone();
 
       const new_x =
         this._focusObject.getModel().position.x +
@@ -62,17 +63,17 @@ export class Camera {
       this._camera.position.x = lerp(
         this._camera.position.x,
         new_x,
-        deltaTime * this._moveSpeed,
+        deltaTime * this._moveSpeed
       );
       this._camera.position.y = lerp(
         this._camera.position.y,
         new_y,
-        deltaTime * this._moveSpeed,
+        deltaTime * this._moveSpeed
       );
       this._camera.position.z = lerp(
         this._camera.position.z,
         new_z,
-        deltaTime * this._moveSpeed,
+        deltaTime * this._moveSpeed
       );
 
       // Calculate the direction from the camera to the target object
@@ -80,7 +81,7 @@ export class Camera {
       directionToTarget
         .subVectors(
           this._focusObject.getModel().position,
-          this._camera.position,
+          this._camera.position
         )
         .normalize();
       const currentDirection = new Vector3();
@@ -89,13 +90,19 @@ export class Camera {
       newDirection.lerpVectors(
         currentDirection,
         directionToTarget,
-        this._moveSpeed * deltaTime,
+        this._moveSpeed * deltaTime
       );
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
 
-      this._realSpeed = this._camera.position.distanceTo(cameraLastPos) * 10;
-      this._app.getComposer().setCameraSpeed(this._realSpeed);
     }
+    this._realSpeed = this._camera.position.distanceTo(cameraLastPos) * 10;
+    this._app.getComposer().setCameraSpeed(this._realSpeed);
+    // Is inside orbit if is inside the spehere of radius 20
+    this._isInsideOrbit = this._camera.position.distanceTo(
+      this._focusObject.getModel().position
+    ) < 10;
+    this._moveSpeed = this._isInsideOrbit ? 8 : 2;
+    this._app.getComposer().toggleChromaticAberration(this._isInsideOrbit);
   }
 
   focusNext() {
@@ -108,8 +115,8 @@ export class Camera {
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[
-        (index - 1 + this._focusObjects.length) % this._focusObjects.length
-      ];
+      (index - 1 + this._focusObjects.length) % this._focusObjects.length
+        ];
   }
 
   onMouseMove(e) {
