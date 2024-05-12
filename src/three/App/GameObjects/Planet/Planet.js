@@ -6,7 +6,9 @@ import fragmentInside from "./frag_inside.glsl?raw";
 import vertex from "./vertex.glsl?raw";
 
 export class Planet extends GameObject {
-  _skyColor = new Vector3(0, 0.5, 1);
+  _initialSkyColor = new Vector3(0, 0.5, 1);
+  _skyColor = this._initialSkyColor;
+  _material;
 
   constructor(app) {
     super(app, "planet");
@@ -36,14 +38,39 @@ export class Planet extends GameObject {
       transparent: true,
       uniforms: {
         uSkyColor: { value: this._skyColor }
-      },
+      }
       // wireframe: true
     });
 
     // const atmosphere = new Mesh(atmosphereGeometry, atmosphereMaterial);
     const atmosphereInner = new Mesh(atmosphereGeometry, atmosphereMaterialInner);
+    this._material = atmosphereMaterialInner;
 
     // this._model.add(atmosphere);
     this._model.add(atmosphereInner);
+
+    const colorInput = document.querySelector("#atmosphere-color-input");
+    // retrieve hex color from input
+    colorInput.addEventListener("change", (e) => {
+      try {
+        const hexColor = e.target.value;
+        if (!hexColor) {
+          this._skyColor = this._initialSkyColor;
+          return;
+        }
+        const rgbColor = parseInt(hexColor.replace("#", ""), 16);
+        const r = (rgbColor >> 16) & 255;
+        const g = (rgbColor >> 8) & 255;
+        const b = rgbColor & 255;
+        this._skyColor = new Vector3(r / 255, g / 255, b / 255);
+      } catch (e) {
+        this._skyColor = this._initialSkyColor;
+      }
+    });
+  }
+
+  onUpdate(deltaTime) {
+    // update material uniforms
+    this._material.uniforms.uSkyColor.value = this._skyColor;
   }
 }
