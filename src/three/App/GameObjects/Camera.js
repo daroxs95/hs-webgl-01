@@ -57,9 +57,9 @@ export class Camera {
         this._mouse.x * this._moveAmount;
       const new_y =
         this._focusObject.getModel().position.y +
-        2 +
+        3 +
         this._mouse.y * this._moveAmount;
-      const new_z = this._focusObject.getModel().position.z + 2;
+      const new_z = this._focusObject.getModel().position.z + 2.5;
       this._camera.position.x = lerp(
         this._camera.position.x,
         new_x,
@@ -93,11 +93,9 @@ export class Camera {
         this._moveSpeed * deltaTime
       );
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
-
     }
     this._realSpeed = this._camera.position.distanceTo(cameraLastPos) * 10;
     this._app.getComposer().setCameraSpeed(this._realSpeed);
-    // Is inside orbit if is inside the spehere of radius 20
     this._isInsideOrbit = this._camera.position.distanceTo(
       this._focusObject.getModel().position
     ) < 10;

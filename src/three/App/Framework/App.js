@@ -53,7 +53,7 @@ export default class App {
       this._gl.setPixelRatio(dpr);
     }
 
-    this._camera = new PerspectiveCamera(75, aspectRatio, 0.1, 1000);
+    this._camera = new PerspectiveCamera(60, aspectRatio, 0.1, 1000);
 
     // With shadows
     this._gl.shadowMap.enabled = true;
