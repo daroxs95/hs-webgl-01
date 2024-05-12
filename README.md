@@ -27,6 +27,7 @@ npm run dev
 - Animations
 - Slider between scene objects
 - Camera speed based chromatic aberration
+- Atmosphere shader(WIP, basic fresnel effect and blend between inner and outer view)
 
 ![img.png](doc/img.png)
 

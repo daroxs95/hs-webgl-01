@@ -60,15 +60,15 @@ export class Postprocessing extends BasePostprocessing {
   }
 
   onUpdate(deltaTime) {
-    const ammount = this._caEfectOn ? smoothstep(this._cameraSpeed, 0, 2) * 0.008 : 0;
+    const amount = this._caEfectOn ? smoothstep(this._cameraSpeed, 0, 2) * 0.008 : 0;
     this._caEffect.offset.x = lerp(
       this._caEffect.offset.x,
-      ammount,
+      amount,
       deltaTime * this._dampFactor
     );
     this._caEffect.offset.y = lerp(
       this._caEffect.offset.y,
-      ammount,
+      amount,
       deltaTime * this._dampFactor
     );
   }
