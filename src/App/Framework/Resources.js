@@ -1,8 +1,8 @@
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { TextureLoader, LoadingManager } from "three";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
-import { Singleton } from "./Objects/Singleton";
-import { prepModelAndAnimations } from "./Animations";
+import { Singleton } from "./Singleton";
+import { prepModelAndAnimations } from "./helpers/animations";
 
 export class Resources extends Singleton {
   _resources;

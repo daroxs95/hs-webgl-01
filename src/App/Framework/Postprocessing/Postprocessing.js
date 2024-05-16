@@ -8,6 +8,7 @@ export class Postprocessing {
   _gl;
   _scene;
   _camera;
+  _renderPass;
 
   constructor(gl, scene, camera) {
     this._gl = gl;
@@ -18,10 +19,10 @@ export class Postprocessing {
 
   onLoad() {
     this._composer = new EffectComposer(this._gl, {
-      frameBufferType: FloatType,
+      frameBufferType: FloatType
     });
-    const renderPass = new RenderPass(this._scene, this._camera);
-    this._composer.addPass(renderPass);
+    this._renderPass = new RenderPass(this._scene, this._camera);
+    this._composer.addPass(this._renderPass);
     const outputPass = new OutputPass();
     this._composer.addPass(outputPass);
   }
@@ -32,5 +33,12 @@ export class Postprocessing {
 
   render() {
     this._composer.render();
+  }
+
+  setCamera(camera) {
+    this._camera = camera;
+    if (this._renderPass) {
+      this._renderPass.camera = camera;
+    }
   }
 }

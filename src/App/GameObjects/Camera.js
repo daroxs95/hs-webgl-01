@@ -1,5 +1,4 @@
 import { lerp } from "three/src/math/MathUtils";
-import { OrbitControls } from "three/addons";
 import { PerspectiveCamera, Vector3 } from "three";
 import { GameObject } from "../Framework";
 
@@ -31,11 +30,6 @@ export class Camera extends GameObject {
       this._initialPosition.y,
       this._initialPosition.z
     );
-    // this._orbitControls = new OrbitControls(
-    //   this._camera,
-    //   this._app.getGlContext().domElement
-    // );
-    // this._orbitControls.enabled = !this._controlEnabled;
 
     const prevBtn = document.querySelector("#slider-prev");
     prevBtn.addEventListener("click", () => {
@@ -136,5 +130,9 @@ export class Camera extends GameObject {
     if (e.key === "f") {
       this.focusNext();
     }
+  }
+
+  addFocusObject(focusObject) {
+    this._focusObjects.push(focusObject);
   }
 }

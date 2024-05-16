@@ -16,12 +16,13 @@ export class Postprocessing extends BasePostprocessing {
   _caEffect;
   _dampFactor = 10;
   _caEfectOn = false;
+  _renderPass;
 
   onLoad() {
     this._composer = new EffectComposer(this._gl, {
       frameBufferType: FloatType
     });
-    const renderPass = new RenderPass(this._scene, this._camera);
+    this._renderPass = new RenderPass(this._scene, this._camera);
 
     const noiseEffect = new NoiseEffect();
     noiseEffect.blendMode.opacity.value = this._baseNoiseV;
@@ -42,7 +43,7 @@ export class Postprocessing extends BasePostprocessing {
         intensity: 0.25
       })
     );
-    this._composer.addPass(renderPass);
+    this._composer.addPass(this._renderPass);
     this._composer.addPass(effectPass);
     this._cameraSpeed = 10;
   }
@@ -53,10 +54,6 @@ export class Postprocessing extends BasePostprocessing {
 
   toggleChromaticAberration(val) {
     this._caEfectOn = val;
-  }
-
-  render() {
-    this._composer.render();
   }
 
   onUpdate(deltaTime) {

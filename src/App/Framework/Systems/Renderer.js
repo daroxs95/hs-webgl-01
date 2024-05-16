@@ -1,24 +1,24 @@
 import {
-  Clock,
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   WebGLRenderer
 } from "three";
 import Stats from "stats.js";
+import { System } from "../ECS";
 
-export default class App {
+export default class Renderer extends System {
   _gl;
   _camera;
   _scene;
   _stats;
   _mixers;
-  _clock;
   _gameObjects;
   _composer;
   _renderer;
 
   constructor(Composer) {
+    super();
     this.init();
     this._gameObjects = [];
     this._composer = Composer
@@ -61,7 +61,6 @@ export default class App {
     document.querySelector("#stats").appendChild(this._stats.dom);
 
     this._mixers = [];
-    this._clock = new Clock();
 
     this.handleEvents();
   }
@@ -70,21 +69,46 @@ export default class App {
     for (let gameObject of this._gameObjects) {
       gameObject.onLoad();
     }
+
+    // TODO this is a hack because the ECS system is not fully implemented
+    for (const entity of this._entities) {
+      const animatedMesh = entity.getComponent("animated_mesh");
+      if (animatedMesh) {
+        this.registerGameObject(animatedMesh);
+      }
+      const mesh = entity.getComponent("mesh");
+      if (mesh) {
+        this.registerGameObject(mesh);
+      }
+
+      // TODO not used for now
+      const camera = entity.getComponent("camera");
+      if (camera) {
+        this.registerGameObject(camera);
+      }
+
+      const node = entity.getComponent("node");
+      if (node) {
+        this.registerGameObject(node);
+      }
+    }
   }
 
-  render() {
+  process(deltaTime, elapsedTime) {
     this._stats.begin();
-    const deltaTime = this._clock.getDelta();
+
     this._renderer.render(this._scene, this._camera);
+
+    // TODO this needs to be handled fully by Scriptable system, but animation logic is not fully implemented as component
     for (const mixer of this._mixers) {
       mixer.update(deltaTime);
     }
+    // TODO this needs to be handled fully by Scriptable system, but camera logic is not fully implemented as component
     for (const gameObject of this._gameObjects) {
-      gameObject.onUpdate(deltaTime, this.getTime());
+      gameObject.onUpdate(deltaTime, elapsedTime);
     }
     this._composer?.onUpdate(deltaTime);
     this._stats.end();
-    window.requestAnimationFrame(() => this.render());
   }
 
   resize() {
@@ -93,6 +117,8 @@ export default class App {
     this._camera.updateProjectionMatrix();
   }
 
+  // TODO events should be handled by a potential different ECS where we register different systems as keyboard and mouse input
+  //  but it is coupled right now to gameObjects
   handleEvents() {
     window.addEventListener("resize", () => {
       this.resize();
@@ -117,22 +143,16 @@ export default class App {
     });
   }
 
-  getScene() {
-    return this._scene;
-  }
-
-  getCamera() {
-    return this._camera;
-  }
-
   setCamera(camera) {
     this._camera = camera;
+    this._composer?.setCamera(camera);
   }
 
   addModelToScene = (model) => {
     this._scene.add(model);
   };
 
+  // TODO: This is a hack because the ECS system is not fully implemented
   registerGameObject(gameObject) {
     this._gameObjects.push(gameObject);
     if (gameObject.getModel) {
@@ -146,13 +166,9 @@ export default class App {
     if (gameObject.getMixer) {
       this._mixers.push(gameObject.getMixer());
     }
-  }
 
-  getTime() {
-    return this._clock.getElapsedTime();
-  }
-
-  getComposer() {
-    return this._composer;
+    if (gameObject.getNode) {
+      this.addModelToScene(gameObject.getNode());
+    }
   }
 }

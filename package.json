@@ -11,12 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ammojs3": "^0.0.11",
     "postprocessing": "^6.35.4",
     "stats.js": "^0.17.0",
     "three": "^0.164.1"
   },
   "devDependencies": {
+    "@types/node": "^20.12.12",
     "prettier": "3.2.5",
+    "typescript": "^5.4.5",
     "vite": "^5.2.10"
   }
 }
