@@ -8,8 +8,8 @@
 <body>
 <canvas id="canvas"></canvas>
 <div id="tutorial" class="helper-ui">
-  <p>Press C to enable orbit controls</p>
-  <br />
+<!--  <p>Press C to enable orbit controls</p>-->
+<!--  <br />-->
   <p>Press F to focus next object</p>
 </div>
 
@@ -26,6 +26,7 @@
 <div id="loading">
   <div>
     <div id="progress">0%</div>
+    <div class="btn" id="play">Play</div>
   </div>
 </div>
 
@@ -34,11 +35,12 @@
 <style>
     body {
         position: relative;
+        font-family: monospace;
     }
 
     #loading {
         position: absolute;
-        background: #303840;
+        background: black;
         top: 0;
         left: 0;
         right: 0;
@@ -51,9 +53,11 @@
     }
 
     #progress {
+        transform: translate(-50%, -50%);
         color: white;
         font-size: 3rem;
-        font-family: monospace;
+        position: absolute;
+        transition: all 1s ease;
     }
 
     * {
@@ -129,7 +133,7 @@
         outline: none;
     }
 
-    #atmosphere-color-input:hover, #atmosphere-color-input:focus {
+    #play:hover, #atmosphere-color-input:hover, #atmosphere-color-input:focus {
         border: #ffec75 2px solid;
         color: #ffec75;
     }
@@ -140,6 +144,17 @@
 
     .helper-ui {
         display: none;
+    }
+
+    #play {
+        opacity: 0;
+        font-size: 50px;
+        color: white;
+        border-color: white;
+        pointer-events: all;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        transition: all 1s ease 0.5s;
     }
 </style>
 </html>

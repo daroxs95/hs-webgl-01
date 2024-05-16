@@ -20,13 +20,13 @@ const manager = new LoadingManager();
 
 const progressElem = document.querySelector("#progress");
 const loadingElem = document.querySelector("#loading");
+const playBtnElem = document.querySelector("#play");
 
 manager.onProgress = (url, itemsLoaded, itemsTotal) => {
   progressElem.innerHTML = `${((itemsLoaded / itemsTotal) * 100) | 0}%`;
   if (itemsLoaded === itemsTotal) {
-    setTimeout(() => {
-      loadingElem.style.opacity = 0;
-    }, 500);
+    progressElem.style.opacity = 0;
+    playBtnElem.style.opacity = 1;
   }
 };
 
@@ -76,6 +76,11 @@ atmosphere.addComponent("mesh", new MeshObject(
 ));
 atmosphere.addComponent("script", Atmosphere);
 
+
+// Lighting entity
+const lighting = gameLoop.createEntity("alien");
+lighting.addComponent("node", Lighting);
+
 // Assign entities to systems
 gameLoop.syncSystemsAndEntities();
 
@@ -90,12 +95,31 @@ const camera = new Camera([
   rocket.getComponent("mesh")
 ]);
 
-// Lighting entity
-const lighting = gameLoop.createEntity("alien");
-lighting.addComponent("node", Lighting);
-
 renderer.registerGameObject(camera);
 // renderer.registerGameObject(new Planet());
 renderer.load();
 
-gameLoop.loop();
+playBtnElem.addEventListener("click", () => {
+  setTimeout(() => {
+    loadingElem.style.opacity = 0;
+  }, 500);
+  gameLoop.loop();
+});
+
+
+let helperOn = false;
+const helperElements = document.querySelectorAll(".helper-ui");
+
+const toggleHelpers = (val) => {
+  helperElements.forEach((elem) => {
+    elem.style.display = !helperOn ? "none" : "block";
+  });
+};
+toggleHelpers(helperOn);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "h") {
+    helperOn = !helperOn;
+    toggleHelpers(helperOn);
+  }
+});
