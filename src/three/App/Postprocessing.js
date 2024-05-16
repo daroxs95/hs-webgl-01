@@ -31,7 +31,7 @@ export class Postprocessing extends BasePostprocessing {
 
     const effectPass = new EffectPass(
       this._camera,
-      this._caEffect,
+      // this._caEffect,
       noiseEffect,
       new BloomEffect({
         mipmapBlur: true,

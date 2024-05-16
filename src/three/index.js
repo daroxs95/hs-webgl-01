@@ -1,6 +1,6 @@
 import App from "./App/Framework/App";
-import { AmbientLight, DirectionalLight } from "three";
-import { resources } from "./App/assets";
+import { AmbientLight, DirectionalLight, LoadingManager } from "three";
+import { assets } from "./App/assets";
 import { Astronaut } from "./App/GameObjects/Astronaut";
 import { Rocket } from "./App/GameObjects/Rocket";
 import { Planet } from "./App/GameObjects/Planet/Planet";
@@ -9,12 +9,15 @@ import { Camera } from "./App/GameObjects/Camera";
 import { Rose } from "./App/GameObjects/Rose";
 import { Star } from "./App/GameObjects/Star";
 import { Alien } from "./App/GameObjects/Alien";
+import { Resources } from "./App/Framework";
 
-const app = new App(resources, Postprocessing);
+const manager = new LoadingManager();
+const resources = new Resources(assets, manager);
 
 const progressElem = document.querySelector("#progress");
 const loadingElem = document.querySelector("#loading");
-app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
+
+manager.onProgress = (url, itemsLoaded, itemsTotal) => {
   progressElem.innerHTML = `${((itemsLoaded / itemsTotal) * 100) | 0}%`;
   if (itemsLoaded === itemsTotal) {
     setTimeout(() => {
@@ -22,21 +25,24 @@ app.getManager().onProgress = (url, itemsLoaded, itemsTotal) => {
     }, 500);
   }
 };
+await resources.load();
 
-await app.loadResources();
-app.prepModelsAndAnimations();
+
+// const app = new App(Postprocessing);
+const app = new App();
+
 const objects = [
-  new Astronaut(app),
-  new Rocket(app),
-  new Rose(app),
-  new Star(app),
-  new Alien(app),
+  new Astronaut(),
+  new Rocket(),
+  new Rose(),
+  new Star(),
+  new Alien()
 ];
 for (const object of objects) {
   app.registerGameObject(object);
 }
-app.registerGameObject(new Camera(app, objects));
-app.registerGameObject(new Planet(app));
+app.registerGameObject(new Camera(objects));
+app.registerGameObject(new Planet());
 app.load();
 
 // light
@@ -66,5 +72,6 @@ directionalLight.shadow.mapSize.set(2048, 2048);
 // pmremGenerator.dispose();
 // app.getScene().background = envMap;
 // app.getScene().environment = envMap;
+
 
 app.render();

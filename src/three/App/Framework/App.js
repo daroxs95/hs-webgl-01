@@ -1,36 +1,30 @@
 import {
   Clock,
-  LoadingManager,
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
   WebGLRenderer
 } from "three";
 import Stats from "stats.js";
-import { Resources } from "./Resources";
-import { prepModelAndAnimations } from "./Animations";
 
 export default class App {
   _gl;
   _camera;
   _scene;
   _stats;
-  _resources;
-  _manager;
   _mixers;
   _clock;
   _gameObjects;
   _composer;
   _renderer;
 
-  constructor(assets, Composer) {
+  constructor(Composer) {
     this.init();
-    this._resources = new Resources(assets, this._manager);
     this._gameObjects = [];
     this._composer = Composer
       ? new Composer(this._gl, this._scene, this._camera)
       : null;
-    this._composer.onLoad();
+    this._composer?.onLoad();
     this._renderer = this._composer ?? this._gl;
     this.resize();
   }
@@ -64,19 +58,12 @@ export default class App {
 
     // Stats
     this._stats = new Stats();
-    document.body.appendChild(this._stats.dom);
-
-    // Loading manager
-    this._manager = new LoadingManager();
+    document.querySelector("#stats").appendChild(this._stats.dom);
 
     this._mixers = [];
     this._clock = new Clock();
 
     this.handleEvents();
-  }
-
-  async loadResources() {
-    await this._resources.load();
   }
 
   load() {
@@ -93,7 +80,7 @@ export default class App {
       mixer.update(deltaTime);
     }
     for (const gameObject of this._gameObjects) {
-      gameObject.onUpdate(deltaTime);
+      gameObject.onUpdate(deltaTime, this.getTime());
     }
     this._composer?.onUpdate(deltaTime);
     this._stats.end();
@@ -110,6 +97,24 @@ export default class App {
     window.addEventListener("resize", () => {
       this.resize();
     });
+
+    window.addEventListener("keydown", (e) => {
+      for (const gameObject of this._gameObjects) {
+        gameObject.onKeyDown(e);
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      for (const gameObject of this._gameObjects) {
+        gameObject.onKeyUp(e);
+      }
+    });
+
+    window.addEventListener("pointermove", (e) => {
+      for (const gameObject of this._gameObjects) {
+        gameObject.onMouseMove(e);
+      }
+    });
   }
 
   getScene() {
@@ -120,43 +125,27 @@ export default class App {
     return this._camera;
   }
 
-  getGlContext() {
-    return this._gl;
+  setCamera(camera) {
+    this._camera = camera;
   }
 
-  getResources() {
-    return this._resources;
-  }
-
-  getManager() {
-    return this._manager;
-  }
-
-  addModelToScene = (name = false) => {
-    const model = this._resources.get(name);
-
-    model.scene.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-      }
-    });
-    this._scene.add(model.scene);
-    return model;
+  addModelToScene = (model) => {
+    this._scene.add(model);
   };
-
-  prepModelsAndAnimations() {
-    for (let value of this._resources.getAll().values()) {
-      prepModelAndAnimations(value);
-    }
-  }
-
-  getMixers() {
-    return this._mixers;
-  }
 
   registerGameObject(gameObject) {
     this._gameObjects.push(gameObject);
+    if (gameObject.getModel) {
+      this.addModelToScene(gameObject.getModel());
+    }
+
+    if (gameObject.getCamera) {
+      this.setCamera(gameObject.getCamera());
+    }
+
+    if (gameObject.getMixer) {
+      this._mixers.push(gameObject.getMixer());
+    }
   }
 
   getTime() {

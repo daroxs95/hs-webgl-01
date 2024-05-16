@@ -1,10 +1,11 @@
 import { lerp } from "three/src/math/MathUtils";
 import { OrbitControls } from "three/addons";
-import { Vector3 } from "three";
+import { PerspectiveCamera, Vector3 } from "three";
+import { GameObject } from "../Framework";
 
-export class Camera {
+export class Camera extends GameObject {
   _camera;
-  _app;
+  _appComposer;
   _mouse = { x: 0, y: 0 };
   _initialPosition = { x: 0, y: 5500, z: 2.5 };
   _moveSpeed = 2;
@@ -16,9 +17,10 @@ export class Camera {
   _realSpeed = 0;
   _isInsideOrbit = false;
 
-  constructor(app, focusObjects) {
-    this._app = app;
-    this._camera = this._app.getCamera();
+  constructor(focusObjects) {
+    super();
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    this._camera = new PerspectiveCamera(60, aspectRatio, 0.1, 1000);
     this._focusObjects = focusObjects;
     this._focusObject = this._focusObjects[0];
   }
@@ -29,13 +31,11 @@ export class Camera {
       this._initialPosition.y,
       this._initialPosition.z
     );
-    this._orbitControls = new OrbitControls(
-      this._camera,
-      this._app.getGlContext().domElement
-    );
-    this._orbitControls.enabled = !this._controlEnabled;
-    window.addEventListener("pointermove", (e) => this.onMouseMove(e));
-    window.addEventListener("keyup", (e) => this.onKeyUp(e));
+    // this._orbitControls = new OrbitControls(
+    //   this._camera,
+    //   this._app.getGlContext().domElement
+    // );
+    // this._orbitControls.enabled = !this._controlEnabled;
 
     const prevBtn = document.querySelector("#slider-prev");
     prevBtn.addEventListener("click", () => {
@@ -45,6 +45,10 @@ export class Camera {
     nextBtn.addEventListener("click", () => {
       this.focusNext();
     });
+  }
+
+  getCamera() {
+    return this._camera;
   }
 
   onUpdate(deltaTime) {
@@ -95,12 +99,12 @@ export class Camera {
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
     }
     this._realSpeed = this._camera.position.distanceTo(cameraLastPos) * 10;
-    this._app.getComposer().setCameraSpeed(this._realSpeed);
+    this._appComposer?.setCameraSpeed(this._realSpeed);
     this._isInsideOrbit = this._camera.position.distanceTo(
       this._focusObject.getModel().position
     ) < 10;
     this._moveSpeed = this._isInsideOrbit ? 8 : 2;
-    this._app.getComposer().toggleChromaticAberration(this._isInsideOrbit);
+    this._appComposer?.toggleChromaticAberration(this._isInsideOrbit);
   }
 
   focusNext() {

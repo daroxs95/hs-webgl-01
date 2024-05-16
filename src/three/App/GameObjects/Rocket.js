@@ -1,8 +1,8 @@
-import { GameObject } from "../Framework";
+import { MeshObject } from "../Framework";
 
-export class Rocket extends GameObject {
-  constructor(app) {
-    super(app, "rocket");
+export class Rocket extends MeshObject {
+  constructor() {
+    super("rocket");
     this._mixer = null;
   }
 

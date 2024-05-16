@@ -1,9 +1,8 @@
 import { GameObjectAnimated } from "../Framework";
 
 export class Astronaut extends GameObjectAnimated {
-  constructor(app) {
-    super(app, "astronaut_anim");
-    this._mixer = null;
+  constructor() {
+    super("astronaut_anim");
   }
 
   onLoad() {
@@ -13,6 +12,4 @@ export class Astronaut extends GameObjectAnimated {
     const action = this._mixer.clipAction(this._resource.animsByName["idle"]);
     action.play();
   }
-
-  onUpdate(deltaTime) {}
 }

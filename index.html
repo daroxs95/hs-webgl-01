@@ -7,12 +7,13 @@
 
 <body>
 <canvas id="canvas"></canvas>
-<div id="tutorial">
+<div id="tutorial" class="helper-ui">
   <p>Press C to enable orbit controls</p>
   <br />
   <p>Press F to focus next object</p>
 </div>
 
+<div id="stats" class="helper-ui"></div>
 <div id="slider-buttons">
   <div class="btn" id="slider-prev">Prev</div>
   <div class="btn" id="slider-next">Next</div>
@@ -135,6 +136,10 @@
 
     #atmosphere-color-input::placeholder {
         color: #303840;
+    }
+
+    .helper-ui {
+        display: none;
     }
 </style>
 </html>

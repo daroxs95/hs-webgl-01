@@ -1,8 +1,8 @@
-import { GameObject } from "../Framework";
+import { MeshObject } from "../Framework";
 
-export class Rose extends GameObject {
-  constructor(app) {
-    super(app, "rose");
+export class Rose extends MeshObject {
+  constructor() {
+    super("rose");
   }
 
   onLoad() {
@@ -10,6 +10,4 @@ export class Rose extends GameObject {
     this._model.scale.set(1.2, 1.2, 1.2);
     this._model.position.set(0.2, 10.36, 3);
   }
-
-  onUpdate(deltaTime) {}
 }

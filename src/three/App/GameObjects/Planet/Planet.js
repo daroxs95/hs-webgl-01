@@ -1,17 +1,17 @@
-import { GameObject } from "../../Framework";
-import { AdditiveBlending, BackSide, Mesh, SphereGeometry, Vector3 } from "three";
+import { MeshObject } from "../../Framework";
+import { AdditiveBlending, BackSide, Color, Mesh, PlaneGeometry, SphereGeometry, Vector3 } from "three";
 import { ShaderMaterial } from "three";
 import fragment from "./frag.glsl?raw";
 import fragmentInside from "./frag_inside.glsl?raw";
 import vertex from "./vertex.glsl?raw";
 
-export class Planet extends GameObject {
-  _initialSkyColor = new Vector3(0, 0.5, 1);
-  _skyColor = this._initialSkyColor;
+export class Planet extends MeshObject {
+  _initialSkyColor = new Color(0, 0.5, 1);
+  _skyColor = new Color(this._initialSkyColor);
   _material;
 
-  constructor(app) {
-    super(app, "planet");
+  constructor() {
+    super("planet");
   }
 
   onLoad() {
@@ -19,6 +19,7 @@ export class Planet extends GameObject {
     this._model.position.set(0, 0, 0);
 
     const atmosphereGeometry = new SphereGeometry(20, 100, 100);
+    new PlaneGeometry();
     // const atmosphereMaterial = new ShaderMaterial({
     //   vertexShader: vertex,
     //   fragmentShader: fragment,
@@ -62,7 +63,7 @@ export class Planet extends GameObject {
         const r = (rgbColor >> 16) & 255;
         const g = (rgbColor >> 8) & 255;
         const b = rgbColor & 255;
-        this._skyColor = new Vector3(r / 255, g / 255, b / 255);
+        this._skyColor.set(r / 255, g / 255, b / 255);
       } catch (e) {
         this._skyColor = this._initialSkyColor;
       }

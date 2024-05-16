@@ -1,8 +1,8 @@
-import { GameObject } from "../Framework";
+import { MeshObject } from "../Framework";
 
-export class Alien extends GameObject {
-  constructor(app) {
-    super(app, "alien");
+export class Alien extends MeshObject {
+  constructor() {
+    super("alien");
   }
 
   onLoad() {
@@ -14,5 +14,6 @@ export class Alien extends GameObject {
     this._model.rotation.z = Math.PI * -0.06;
   }
 
-  onUpdate(deltaTime) {}
+  onUpdate(deltaTime) {
+  }
 }

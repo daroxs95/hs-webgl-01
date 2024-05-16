@@ -1,4 +1,4 @@
-export const resources = [
+export const assets = [
   { key: "astronaut", type: "gltf", url: "assets/cute_astronaut.glb" },
   { key: "astronaut_anim", type: "gltf", url: "assets/astronaut_anim.glb" },
   { key: "planet", type: "gltf", url: "assets/planet.glb" },

@@ -1,22 +1,20 @@
 import { AnimationMixer } from "three";
-import { GameObject } from "./GameObject";
+import { MeshObject } from "./MeshObject";
 
-export class GameObjectAnimated extends GameObject {
+export class GameObjectAnimated extends MeshObject {
   _mixer;
 
   constructor(app, resource_name) {
     if (new.target === GameObjectAnimated) {
       throw new TypeError(
-        "Cannot construct GameObjectAnimated instances directly",
+        "Cannot construct GameObjectAnimated instances directly"
       );
     }
     super(app, resource_name);
-    this._mixer = null;
+    this._mixer = new AnimationMixer(this._model);
   }
 
-  onLoad() {
-    super.onLoad();
-    this._mixer = new AnimationMixer(this._model);
-    this._app.getMixers().push(this._mixer);
+  getMixer() {
+    return this._mixer;
   }
 }
