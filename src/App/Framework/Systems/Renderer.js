@@ -2,7 +2,7 @@ import {
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
-  WebGLRenderer
+  WebGLRenderer,
 } from "three";
 import Stats from "stats.js";
 import { System } from "../ECS";
@@ -35,7 +35,7 @@ export default class Renderer extends System {
       canvas: document.querySelector("#canvas"),
       antialias: window.devicePixelRatio <= 1,
       stencil: true,
-      depth: true
+      depth: true,
     });
 
     // Renderer
@@ -91,6 +91,14 @@ export default class Renderer extends System {
       if (node) {
         this.registerGameObject(node);
       }
+
+      const rigidBody = entity.getComponent("rigid_body");
+      if (rigidBody) {
+        const helperMesh = rigidBody.getCollisionShapeHelper();
+        if (helperMesh) {
+          this.addModelToScene(helperMesh);
+        }
+      }
     }
   }
 
@@ -125,18 +133,27 @@ export default class Renderer extends System {
     });
 
     window.addEventListener("keydown", (e) => {
+      for (let i = 0; i < this._entities.length; i++) {
+        this._entities[i].getComponent("script")?.onKeyDown(e);
+      }
       for (const gameObject of this._gameObjects) {
         gameObject.onKeyDown(e);
       }
     });
 
     window.addEventListener("keyup", (e) => {
+      for (let i = 0; i < this._entities.length; i++) {
+        this._entities[i].getComponent("script")?.onKeyUp(e);
+      }
       for (const gameObject of this._gameObjects) {
         gameObject.onKeyUp(e);
       }
     });
 
     window.addEventListener("pointermove", (e) => {
+      for (let i = 0; i < this._entities.length; i++) {
+        this._entities[i].getComponent("script")?.onMouseMove(e);
+      }
       for (const gameObject of this._gameObjects) {
         gameObject.onMouseMove(e);
       }

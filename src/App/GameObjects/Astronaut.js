@@ -1,6 +1,5 @@
 import { Script } from "../Framework/Components/Script";
 
-
 export class Astronaut extends Script {
   _transform;
   _mixer;

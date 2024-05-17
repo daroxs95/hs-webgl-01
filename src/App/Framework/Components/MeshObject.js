@@ -4,8 +4,8 @@ export class MeshObject extends GameObject {
   _model;
   _materials = [];
 
-  constructor(model) {
-    super();
+  constructor(model, entity) {
+    super(entity);
     this._model = model;
 
     model.traverse((child) => {

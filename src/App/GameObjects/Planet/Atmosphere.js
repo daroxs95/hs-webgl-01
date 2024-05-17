@@ -25,8 +25,8 @@ export class Atmosphere extends Script {
       blending: AdditiveBlending,
       transparent: true,
       uniforms: {
-        uSkyColor: { value: this._skyColor }
-      }
+        uSkyColor: { value: this._skyColor },
+      },
       // wireframe: true
     });
 

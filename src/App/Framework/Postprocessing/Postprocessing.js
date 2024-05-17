@@ -19,7 +19,7 @@ export class Postprocessing {
 
   onLoad() {
     this._composer = new EffectComposer(this._gl, {
-      frameBufferType: FloatType
+      frameBufferType: FloatType,
     });
     this._renderPass = new RenderPass(this._scene, this._camera);
     this._composer.addPass(this._renderPass);

@@ -20,7 +20,7 @@ export class Star extends Script {
     this._transform.position.set(
       this._initialPosition.x,
       this._initialPosition.y,
-      this._initialPosition.z
+      this._initialPosition.z,
     );
     this._materials[0].material.emissive = new Color(0xffd400);
     const pointLight = new PointLight(0xffd400, 1, 100);
@@ -31,8 +31,7 @@ export class Star extends Script {
     // floating movement using deltaTime
     this._transform.position.y =
       this._initialPosition.y +
-      Math.sin(this._floatingSpeed * elapsedTime) *
-      this._floatingAmmount;
+      Math.sin(this._floatingSpeed * elapsedTime) * this._floatingAmmount;
 
     //floating rotation on all axis movement
     this._transform.rotation.x += this._rotationSpeed * deltaTime;

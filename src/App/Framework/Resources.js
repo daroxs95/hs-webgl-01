@@ -20,7 +20,7 @@ export class Resources extends Singleton {
     this._loaders = {
       gltf: new GLTFLoader(manager),
       texture: new TextureLoader(manager),
-      rgbe: new RGBELoader(manager)
+      rgbe: new RGBELoader(manager),
     };
     this._assets = assets;
   }
@@ -47,7 +47,7 @@ export class Resources extends Singleton {
             this._resources.set(asset.key, resource);
             resolve(resource);
           });
-        })
+        }),
       );
     }
     await Promise.all(promises);

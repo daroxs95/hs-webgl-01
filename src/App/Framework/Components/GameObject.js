@@ -1,22 +1,13 @@
 import { Component } from "../ECS";
 
 export class GameObject extends Component {
-  constructor() {
-    super();
-  }
+  onLoad() {}
 
-  onLoad() {
-  }
+  onUpdate(deltaTime) {}
 
-  onUpdate(deltaTime) {
-  }
+  onKeyDown(e) {}
 
-  onKeyDown(e) {
-  }
+  onKeyUp(e) {}
 
-  onKeyUp(e) {
-  }
-
-  onMouseMove(e) {
-  }
+  onMouseMove(e) {}
 }

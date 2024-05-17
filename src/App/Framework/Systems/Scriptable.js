@@ -7,9 +7,17 @@ export class Scriptable extends System {
     }
   }
 
+  ready() {
+    for (let i = 0; i < this._entities.length; i++) {
+      this._entities[i].getComponent("script")?.onReady();
+    }
+  }
+
   process(deltaTime, elapsedTime) {
     for (let i = 0; i < this._entities.length; i++) {
-      this._entities[i].getComponent("script")?.onUpdate(deltaTime, elapsedTime);
+      this._entities[i]
+        .getComponent("script")
+        ?.onUpdate(deltaTime, elapsedTime);
     }
   }
 }

@@ -1,18 +1,15 @@
 import { Component } from "../ECS";
 
 export class Script extends Component {
-  onLoad() {
-  }
+  onLoad() {}
 
-  onUpdate(deltaTime, elapsedTime) {
-  }
+  onReady() {}
 
-  onKeyDown(e) {
-  }
+  onUpdate(deltaTime, elapsedTime) {}
 
-  onKeyUp(e) {
-  }
+  onKeyDown(e) {}
 
-  onMouseMove(e) {
-  }
+  onKeyUp(e) {}
+
+  onMouseMove(e) {}
 }

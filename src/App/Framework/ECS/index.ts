@@ -35,13 +35,13 @@ class ECS {
   }
 
   syncSystemsAndEntities() {
-    this._systems.forEach(system => {
+    this._systems.forEach((system) => {
       system.pointToEntities(this._entities);
     });
   }
 
   pointSystemsToEntities(entities: Entity[]) {
-    this._systems.forEach(system => {
+    this._systems.forEach((system) => {
       system.pointToEntities(entities);
     });
   }
@@ -51,9 +51,4 @@ class ECS {
   }
 }
 
-export {
-  Entity,
-  Component,
-  System,
-  ECS
-};
+export { Entity, Component, System, ECS };

@@ -50,13 +50,19 @@ export class Camera extends GameObject {
 
   onUpdate(deltaTime) {
     if (this._controlEnabled) {
-      this._targetObejct.copy(this._focusObject.getModel().position).add(this._modelOffset);
+      this._targetObejct
+        .copy(this._focusObject.getModel().position)
+        .add(this._modelOffset);
       this._targetObejct.x += this._mouse.x * this._moveAmount;
       this._targetObejct.y += this._mouse.y * this._moveAmount;
 
-      this._moveDirection = this._targetObejct.clone().sub(this._camera.position);
+      this._moveDirection = this._targetObejct
+        .clone()
+        .sub(this._camera.position);
       const distance = this._moveDirection.length();
-      const velocity = this._moveDirection.normalize().multiplyScalar(this._moveSpeed * deltaTime);
+      const velocity = this._moveDirection
+        .normalize()
+        .multiplyScalar(this._moveSpeed * deltaTime);
 
       if (distance < velocity.length()) {
         this._camera.position.copy(this._targetObejct);
@@ -69,7 +75,7 @@ export class Camera extends GameObject {
       directionToTarget
         .subVectors(
           this._focusObject.getModel().position,
-          this._camera.position
+          this._camera.position,
         )
         .normalize();
       const currentDirection = new Vector3();
@@ -78,18 +84,19 @@ export class Camera extends GameObject {
       newDirection.lerpVectors(
         currentDirection,
         directionToTarget,
-        this._moveSpeed * deltaTime
+        this._moveSpeed * deltaTime,
       );
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
     }
 
-    this._realSpeed = this._camera.position.distanceTo(this._lastPosition) / deltaTime;
+    this._realSpeed =
+      this._camera.position.distanceTo(this._lastPosition) / deltaTime;
     this._lastPosition.copy(this._camera.position);
 
     this._appComposer?.setCameraSpeed(this._realSpeed);
-    this._isInsideOrbit = this._camera.position.distanceTo(
-      this._focusObject.getModel().position
-    ) < 10;
+    this._isInsideOrbit =
+      this._camera.position.distanceTo(this._focusObject.getModel().position) <
+      10;
     this._moveSpeed = this._isInsideOrbit ? 6 : 100;
     this._appComposer?.toggleChromaticAberration(this._isInsideOrbit);
   }
@@ -104,8 +111,8 @@ export class Camera extends GameObject {
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[
-      (index - 1 + this._focusObjects.length) % this._focusObjects.length
-        ];
+        (index - 1 + this._focusObjects.length) % this._focusObjects.length
+      ];
   }
 
   onMouseMove(e) {

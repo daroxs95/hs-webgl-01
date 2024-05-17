@@ -1,9 +1,6 @@
 import { ECS } from "./ECS";
 
-export class GameLoop extends ECS {
-  _then = 0;
-  _elapsedTime = 0;
-
+export class Events extends ECS {
   loop(now = 0) {
     // convert to seconds
     now *= 0.001;
