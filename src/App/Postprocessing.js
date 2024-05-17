@@ -5,7 +5,10 @@ import {
   NoiseEffect,
   EffectComposer,
   BloomEffect,
-  ChromaticAberrationEffect
+  ChromaticAberrationEffect,
+  ToneMappingEffect,
+  ToneMappingMode,
+  FXAAEffect
 } from "postprocessing";
 import { FloatType } from "three";
 import { lerp, smoothstep } from "three/src/math/MathUtils";
@@ -32,7 +35,8 @@ export class Postprocessing extends BasePostprocessing {
 
     const effectPass = new EffectPass(
       this._camera,
-      // this._caEffect,
+      new FXAAEffect(),
+      this._caEffect,
       noiseEffect,
       new BloomEffect({
         mipmapBlur: true,
@@ -41,6 +45,9 @@ export class Postprocessing extends BasePostprocessing {
         luminanceThreshold: 0.9,
         luminanceSmoothing: 0.75,
         intensity: 0.25
+      }),
+      new ToneMappingEffect({
+        mode: ToneMappingMode.OPTIMIZED_CINEON
       })
     );
     this._composer.addPass(this._renderPass);
@@ -57,7 +64,7 @@ export class Postprocessing extends BasePostprocessing {
   }
 
   onUpdate(deltaTime) {
-    const amount = this._caEfectOn ? smoothstep(this._cameraSpeed, 0, 2) * 0.008 : 0;
+    const amount = this._caEfectOn ? smoothstep(this._cameraSpeed, 0, 2) * 0.005 : 0;
     this._caEffect.offset.x = lerp(
       this._caEffect.offset.x,
       amount,

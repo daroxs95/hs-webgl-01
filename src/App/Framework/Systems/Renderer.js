@@ -171,4 +171,8 @@ export default class Renderer extends System {
       this.addModelToScene(gameObject.getNode());
     }
   }
+
+  getComposer() {
+    return this._composer;
+  }
 }

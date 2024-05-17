@@ -16,8 +16,7 @@ npm run dev
 
 - Resize
 - Request animation frame render
-- Statsjs
-- Orbit controls (optionals)
+- Stats.js
 - Basic lighting
 - Model loading
 - Basic shadows
@@ -25,11 +24,17 @@ npm run dev
 - Camera interactivity
 - Custom game object abstractions
 - Animations
-- Slider between scene objects
-- Camera speed based chromatic aberration
 - Atmosphere shader(WIP, basic fresnel effect and blend between inner and outer view)
+- Tonemapping (OPTIMIZED_CINEON to boost low poly esthetic)
+- FXAA
 
 ![img.png](doc/img.png)
+
+## Notes
+
+- Models are not optimized and all the assets loading is sync as they are low poly.
+- Not using HDRI lighting because space esthetic.
+- Usage of three.js is abstracted as much as possible in form of ECS game engine (WIP).
 
 ## TODO
 

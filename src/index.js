@@ -1,5 +1,5 @@
 import Renderer from "./App/Framework/Systems/Renderer";
-import { AmbientLight, DirectionalLight, LoadingManager, Mesh, ShaderMaterial, SphereGeometry } from "three";
+import { LoadingManager, Mesh, SphereGeometry } from "three";
 import { assets } from "./App/assets";
 import { Astronaut } from "./App/GameObjects/Astronaut";
 import { Rocket } from "./App/GameObjects/Rocket";
@@ -16,6 +16,8 @@ import { ResourceMeshObject } from "./App/Framework/Components/ResourceMeshObjec
 import { Atmosphere } from "./App/GameObjects/Planet/Atmosphere";
 import { Lighting } from "./App/GameObjects/Lighting";
 
+const autoplay = false;
+
 const manager = new LoadingManager();
 
 const progressElem = document.querySelector("#progress");
@@ -26,7 +28,7 @@ manager.onProgress = (url, itemsLoaded, itemsTotal) => {
   progressElem.innerHTML = `${((itemsLoaded / itemsTotal) * 100) | 0}%`;
   if (itemsLoaded === itemsTotal) {
     progressElem.style.opacity = 0;
-    playBtnElem.style.opacity = 1;
+    if (!autoplay) playBtnElem.style.opacity = 1;
   }
 };
 
@@ -93,18 +95,25 @@ const camera = new Camera([
   star.getComponent("mesh"),
   rose.getComponent("mesh"),
   rocket.getComponent("mesh")
-]);
+], renderer.getComposer());
 
 renderer.registerGameObject(camera);
-// renderer.registerGameObject(new Planet());
 renderer.load();
 
-playBtnElem.addEventListener("click", () => {
+const startApp = () => {
   setTimeout(() => {
     loadingElem.style.opacity = 0;
   }, 500);
   gameLoop.loop();
-});
+};
+
+if (autoplay) {
+  startApp();
+} else {
+  playBtnElem.addEventListener("click", () => {
+    startApp();
+  });
+}
 
 
 let helperOn = false;
