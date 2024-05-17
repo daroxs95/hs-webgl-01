@@ -5,7 +5,7 @@ import { collisionHelperMeshShader } from "./Shader";
 export class CapsuleCollisionShape extends CollisionShape {
   constructor(radius, height, helperVisible) {
     const helperMesh = new Mesh(
-      new CapsuleGeometry(radius, height, 50, 50),
+      new CapsuleGeometry(radius, height, 10, 10),
       collisionHelperMeshShader,
     );
     super(helperMesh, helperVisible);

@@ -2,7 +2,7 @@ import {
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
-  WebGLRenderer,
+  WebGLRenderer
 } from "three";
 import Stats from "stats.js";
 import { System } from "../ECS";
@@ -35,7 +35,7 @@ export default class Renderer extends System {
       canvas: document.querySelector("#canvas"),
       antialias: window.devicePixelRatio <= 1,
       stencil: true,
-      depth: true,
+      depth: true
     });
 
     // Renderer
@@ -191,5 +191,9 @@ export default class Renderer extends System {
 
   getComposer() {
     return this._composer;
+  }
+
+  getGlInstance() {
+    return this._gl;
   }
 }

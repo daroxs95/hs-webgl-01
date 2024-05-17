@@ -1,165 +1,186 @@
 <html lang="en">
-  <head>
-    <title>Home</title>
-    <script src="src/index.js" async type="module"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
+<head>
+  <title>Home</title>
+  <script src="src/index.js" async type="module"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
 
-  <body>
-    <canvas id="canvas"></canvas>
-    <div id="tutorial" class="helper-ui">
-      <!--  <p>Press C to enable orbit controls</p>-->
-      <!--  <br />-->
-      <p>Press F to focus next object</p>
-    </div>
+<body>
+<canvas id="canvas"></canvas>
+<div id="tutorial" class="helper-ui">
+  <p>Press C to enable orbit controls</p>
+  <br />
+  <p>Press F to focus next object</p>
+</div>
 
-    <div id="stats" class="helper-ui"></div>
-    <div id="slider-buttons">
-      <div class="btn" id="slider-prev">Prev</div>
-      <div class="btn" id="slider-next">Next</div>
-    </div>
+<div id="stats" class="helper-ui"></div>
+<div id="slider-buttons">
+  <div class="btn" id="slider-prev">Prev</div>
+  <div class="btn" id="slider-next">Next</div>
+</div>
 
-    <div id="atmosphere-color" class="helper-ui">
-      <input
-        id="atmosphere-color-input"
-        type="text"
-        placeholder="Atmosphere color"
-      />
-    </div>
+<div id="atmosphere-color" class="helper-ui">
+  <input
+    id="atmosphere-color-input"
+    type="text"
+    placeholder="Atmosphere color"
+  />
+</div>
 
-    <div id="loading">
-      <div>
-        <div id="progress">0%</div>
-        <div class="btn" id="play">Play</div>
-      </div>
-    </div>
-  </body>
+<div id="start_game_container">
+  <div class="btn" id="start_game">I said Play?</div>
+</div>
 
-  <style>
+<div id="loading" class="fullscreen">
+  <div>
+    <div id="progress">0%</div>
+    <div class="btn" id="play">Play</div>
+  </div>
+</div>
+</body>
+
+<style>
     body {
-      position: relative;
-      font-family: monospace;
+        position: relative;
+        font-family: monospace;
+    }
+
+    #start_game_container {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        gap: 50px;
+        padding: 50px;
+    }
+
+    #start_game {
+        margin: auto;
+        bottom: 5px;
     }
 
     #loading {
-      position: absolute;
-      background: black;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.5s;
-      pointer-events: none;
+        pointer-events: none;
+        background: black;
+    }
+
+    .fullscreen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s;
     }
 
     #progress {
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 3rem;
-      position: absolute;
-      transition: all 0.5s ease;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 3rem;
+        position: absolute;
+        transition: all 0.5s ease;
     }
 
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     canvas {
-      width: 100vw;
-      height: 100vh;
+        width: 100vw;
+        height: 100vh;
     }
 
     #tutorial {
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 1rem;
-      color: white;
-      font-family: monospace;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 1rem;
+        color: white;
+        font-family: monospace;
     }
 
     #slider-buttons {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      color: white;
-      font-family: monospace;
-      display: flex;
-      gap: 50px;
-      justify-content: center;
-      align-items: center;
-      padding: 50px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        color: white;
+        font-family: monospace;
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
     }
 
     .btn {
-      color: #303840;
-      padding: 25px;
-      border: #303840 2px solid;
-      font-size: 25px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
+        color: #303840;
+        padding: 25px;
+        border: #303840 2px solid;
+        font-size: 25px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
     }
 
     .btn:hover {
-      border: #ffec75 2px solid;
-      color: #ffec75;
+        border: #ffec75 2px solid;
+        color: #ffec75;
     }
 
     #atmosphere-color {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      color: white;
-      font-family: monospace;
-      padding: 50px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: white;
+        font-family: monospace;
+        padding: 50px;
     }
 
     #atmosphere-color-input {
-      color: #303840;
-      background: transparent;
-      font-family: monospace;
-      cursor: pointer;
-      border: #303840 2px solid;
-      font-size: 25px;
-      padding: 25px;
-      transition: all 0.2s ease;
+        color: #303840;
+        background: transparent;
+        font-family: monospace;
+        cursor: pointer;
+        border: #303840 2px solid;
+        font-size: 25px;
+        padding: 25px;
+        transition: all 0.2s ease;
     }
 
     #atmosphere-color-input:focus {
-      outline: none;
+        outline: none;
     }
 
     #play:hover,
     #atmosphere-color-input:hover,
     #atmosphere-color-input:focus {
-      border: #ffec75 2px solid;
-      color: #ffec75;
+        border: #ffec75 2px solid;
+        color: #ffec75;
     }
 
     #atmosphere-color-input::placeholder {
-      color: #303840;
+        color: #303840;
     }
 
     .helper-ui {
-      display: none;
+        display: none;
     }
 
     #play {
-      opacity: 0;
-      font-size: 50px;
-      color: white;
-      border-color: white;
-      pointer-events: all;
-      position: absolute;
-      transform: translate(-50%, -50%);
-      transition: all 0.5s ease;
+        opacity: 0;
+        font-size: 50px;
+        color: white;
+        border-color: white;
+        pointer-events: all;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
     }
-  </style>
+</style>
 </html>

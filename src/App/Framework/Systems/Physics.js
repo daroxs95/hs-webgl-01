@@ -5,10 +5,12 @@ import { Vector3 } from "three";
 export class Physics extends System {
   _world;
   _tmpTrans;
+  _uiHelperMesh = false;
 
   async load() {
     await AmmoLib.bind(window)();
     this.setupPhysicsWorld();
+    this.handleEvents();
   }
 
   process(deltaTime, elapsedTime) {
@@ -16,7 +18,9 @@ export class Physics extends System {
 
     for (let i = 0; i < this._entities.length; i++) {
       const rigidBody = this._entities[i].getComponent("rigid_body");
-      const mesh = this._entities[i].getComponent("mesh");
+      const mesh =
+        this._entities[i].getComponent("mesh")
+        ?? this._entities[i].getComponent("animated_mesh");
       if (rigidBody) {
         const objAmmo = rigidBody.getRigidBody();
         const helperMesh = rigidBody.getCollisionShapeHelper();
@@ -49,7 +53,7 @@ export class Physics extends System {
       dispatcher,
       overlappingPairCache,
       solver,
-      collisionConfiguration,
+      collisionConfiguration
     );
     this._world.setGravity(new Ammo.btVector3(0, 0, 0));
     this._tmpTrans = new Ammo.btTransform();
@@ -67,5 +71,22 @@ export class Physics extends System {
 
   setGravity(x, y, z) {
     this._world.setGravity(new Ammo.btVector3(x, y, z));
+  }
+
+  setUiHelperMeshVisible(value) {
+    for (let i = 0; i < this._entities.length; i++) {
+      this._entities[i].getComponent("rigid_body")?.setUiHelperMeshVisible(value);
+    }
+  }
+
+  // TODO events should be handled by a potential different ECS where we register different systems as keyboard and mouse input
+  //  but it is coupled right now to gameObjects
+  handleEvents() {
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "h") {
+        this._uiHelperMesh = !this._uiHelperMesh;
+        this.setUiHelperMeshVisible(this._uiHelperMesh);
+      }
+    });
   }
 }

@@ -4,11 +4,11 @@ import { MeshObject } from "./MeshObject";
 export class ResourceMeshObject extends MeshObject {
   _resource;
 
-  constructor(resource_name) {
+  constructor(resource_name, entity) {
     const resource = Resources.getInstance().get(resource_name);
     const model = resource.scene;
 
-    super(model);
+    super(model, entity);
     this._resource = resource;
 
     // Enabling shadows

@@ -1,7 +1,6 @@
-import { lerp, clamp } from "three/src/math/MathUtils";
 import { PerspectiveCamera, Vector3 } from "three";
 import { GameObject } from "../Framework";
-import { easeInOutCubic } from "../Framework/easings";
+import { OrbitControls } from "three/addons";
 
 export class Camera extends GameObject {
   _camera;
@@ -16,23 +15,29 @@ export class Camera extends GameObject {
   _focusObjects;
   _realSpeed = 0;
   _isInsideOrbit = false;
+  _renderer;
+  _isInGame = false;
 
   _lastPosition = new Vector3();
   _moveDirection = new Vector3();
   _modelOffset = new Vector3(1, 3, 2.5);
   _targetObejct = new Vector3();
 
-  constructor(focusObjects, composer) {
+  constructor(focusObjects, renderer) {
     super();
     const aspectRatio = window.innerWidth / window.innerHeight;
     this._camera = new PerspectiveCamera(60, aspectRatio, 0.1, 1000);
     this._focusObjects = focusObjects;
     this._focusObject = this._focusObjects[0];
-    this._appComposer = composer;
+    this._appComposer = renderer.getComposer();
+    this._renderer = renderer.getGlInstance();
   }
 
   onLoad() {
     this._camera.position.copy(this._initialPosition);
+
+    this._orbitControls = new OrbitControls(this._camera, this._renderer.domElement);
+    this._orbitControls.enabled = !this._controlEnabled;
 
     const prevBtn = document.querySelector("#slider-prev");
     prevBtn.addEventListener("click", () => {
@@ -42,6 +47,18 @@ export class Camera extends GameObject {
     nextBtn.addEventListener("click", () => {
       this.focusNext();
     });
+    const playBtn = document.querySelector("#start_game");
+    playBtn.addEventListener("click", () => {
+      this.lockOnChar();
+      playBtn.style.opacity = 0;
+    });
+  }
+
+  lockOnChar() {
+    this._isInGame = true;
+    this._modelOffset.set(0, 2, -2);
+    const focusObjectScript = this._focusObject.getEntity().getComponent("script");
+    if (focusObjectScript.setControlled) focusObjectScript.setControlled(true);
   }
 
   getCamera() {
@@ -75,7 +92,7 @@ export class Camera extends GameObject {
       directionToTarget
         .subVectors(
           this._focusObject.getModel().position,
-          this._camera.position,
+          this._camera.position
         )
         .normalize();
       const currentDirection = new Vector3();
@@ -84,7 +101,7 @@ export class Camera extends GameObject {
       newDirection.lerpVectors(
         currentDirection,
         directionToTarget,
-        this._moveSpeed * deltaTime,
+        this._moveSpeed * deltaTime
       );
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
     }
@@ -111,8 +128,8 @@ export class Camera extends GameObject {
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[
-        (index - 1 + this._focusObjects.length) % this._focusObjects.length
-      ];
+      (index - 1 + this._focusObjects.length) % this._focusObjects.length
+        ];
   }
 
   onMouseMove(e) {
@@ -127,7 +144,7 @@ export class Camera extends GameObject {
     }
 
     // change focusObject
-    if (e.key === "f") {
+    if (e.key === "f" && !this._isInGame) {
       this.focusNext();
     }
   }

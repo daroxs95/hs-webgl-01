@@ -33,7 +33,9 @@ manager.onProgress = (url, itemsLoaded, itemsTotal) => {
   progressElem.innerHTML = `${((itemsLoaded / itemsTotal) * 100) | 0}%`;
   if (itemsLoaded === itemsTotal) {
     progressElem.style.opacity = 0;
-    if (!autoplay) playBtnElem.style.opacity = 1;
+    if (!autoplay) {
+      playBtnElem.style.opacity = 1;
+    }
   }
 };
 
@@ -58,9 +60,21 @@ gameLoop.addSystem(physics);
 const astronaut = gameLoop.createEntity("astronaut");
 astronaut.addComponent(
   "animated_mesh",
-  new AnimatedGameObject("astronaut_anim"),
+  new AnimatedGameObject("astronaut_anim", astronaut)
 );
 astronaut.addComponent("script", Astronaut);
+astronaut.addComponent(
+  "rigid_body",
+  new RigidBody(
+    {
+      mass: 1,
+      collisionShape: new CapsuleCollisionShape(0.4, 0.3, true),
+      offset: new Vector3(0, -0.4, 0),
+      friction: 0.5
+    },
+    astronaut
+  )
+);
 
 const planet = gameLoop.createEntity("planet");
 planet.addComponent("mesh", new ResourceMeshObject("planet"));
@@ -70,10 +84,10 @@ planet.addComponent(
   new RigidBody(
     {
       mass: 0,
-      collisionShape: new ShpereCollisionShape(11, true),
+      collisionShape: new ShpereCollisionShape(11, true)
     },
-    planet,
-  ),
+    planet
+  )
 );
 
 const rocket = gameLoop.createEntity("rocket");
@@ -82,13 +96,13 @@ rocket.addComponent(
   "rigid_body",
   new RigidBody(
     {
-      mass: 1,
+      mass: 1
       // collisionShape: new CapsuleCollisionShape(0.5, 1, true),
       // collisionShape: new ConvexHullCollisionShape(rocket.getComponent("mesh").getModel(), 1, true),
       // offset: new Vector3(0, -1, 0)
     },
-    rocket,
-  ),
+    rocket
+  )
 );
 rocket.addComponent("script", Rocket);
 
@@ -100,14 +114,14 @@ const star = gameLoop.createEntity("star");
 star.addComponent("mesh", new ResourceMeshObject("star"));
 star.addComponent("script", Star);
 
-const alien = gameLoop.createEntity("alien");
-alien.addComponent("mesh", new ResourceMeshObject("alien"));
-alien.addComponent("script", Alien);
+// const alien = gameLoop.createEntity("alien");
+// alien.addComponent("mesh", new ResourceMeshObject("alien"));
+// alien.addComponent("script", Alien);
 
 const atmosphere = gameLoop.createEntity("atmosphere");
 atmosphere.addComponent(
   "mesh",
-  new MeshObject(new Mesh(new SphereGeometry(20, 100, 100))),
+  new MeshObject(new Mesh(new SphereGeometry(20, 100, 100)))
 );
 atmosphere.addComponent("script", Atmosphere);
 
@@ -130,9 +144,9 @@ const camera = new Camera(
     astronaut.getComponent("animated_mesh"),
     star.getComponent("mesh"),
     rose.getComponent("mesh"),
-    rocket.getComponent("mesh"),
+    rocket.getComponent("mesh")
   ],
-  renderer.getComposer(),
+  renderer
 );
 
 renderer.registerGameObject(camera);

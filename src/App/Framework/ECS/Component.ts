@@ -6,4 +6,8 @@ export class Component {
   constructor(entity: Entity) {
     this._entity = entity;
   }
+
+  getEntity() {
+    return this._entity;
+  }
 }
