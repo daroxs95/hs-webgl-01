@@ -1,4 +1,4 @@
-import { Script } from "../Framework/Components/Script";
+import { Script } from "../../Framework/Components/Script";
 import { Quaternion, Vector3 } from "three";
 
 export class Astronaut extends Script {
@@ -31,20 +31,25 @@ export class Astronaut extends Script {
   }
 
   onUpdate(deltaTime, elapsedTime) {
-    const d = new Vector3(0, 0, 0)
+    const gravity = new Vector3(0, 0, 0)
       .sub(this._transform.position)
       .normalize()
       .multiplyScalar(4);
 
-    // Apply movementaxis on model local space
     const movementVelocity = new Vector3(
-      this._movementAxis.x,
-      this._movementAxis.y,
-      this._movementAxis.z
-    ).applyQuaternion(this._transform.quaternion);
+      0,
+      0,
+      -1
+    );
+    console.log(movementVelocity);
+    // movementVelocity.applyQuaternion(this._transform.quaternion);
 
-    d.add(movementVelocity);
-    this._rigidBody.setLinearVelocity(new Ammo.btVector3(d.x, d.y, d.z));
+    // Apply movement axis on model local space
+    movementVelocity.multiplyScalar(this._movementAxis.z * this._movementSpeed);
+
+    gravity.add(movementVelocity);
+    this._rigidBody.setLinearVelocity(new Ammo.btVector3(gravity.x, gravity.y, gravity.z));
+
     const astronautQuaternion = this._transform.quaternion.clone();
     const planetPosition = new Vector3(0, 0, 0);
     // make y local axis point to the planet

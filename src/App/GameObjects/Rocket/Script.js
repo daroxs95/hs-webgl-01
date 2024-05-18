@@ -1,4 +1,4 @@
-import { Script } from "../Framework/Components/Script";
+import { Script } from "../../Framework/Components/Script";
 import { Vector3 } from "three";
 
 export class Rocket extends Script {

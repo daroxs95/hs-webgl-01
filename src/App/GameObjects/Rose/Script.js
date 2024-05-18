@@ -1,4 +1,4 @@
-import { Script } from "../Framework/Components/Script";
+import { Script } from "../../Framework/Components/Script";
 
 export class Rose extends Script {
   _transform;

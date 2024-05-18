@@ -51,6 +51,8 @@ export class Camera extends GameObject {
     playBtn.addEventListener("click", () => {
       this.lockOnChar();
       playBtn.style.opacity = 0;
+      nextBtn.style.opacity = 0;
+      prevBtn.style.opacity = 0;
     });
   }
 
@@ -119,12 +121,16 @@ export class Camera extends GameObject {
   }
 
   focusNext() {
+    if (this._isInGame) return;
+
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[(index + 1) % this._focusObjects.length];
   }
 
   focusPrev() {
+    if (this._isInGame) return;
+
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[

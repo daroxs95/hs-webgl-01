@@ -1,7 +1,7 @@
 import { AdditiveBlending, BackSide, Color, ShaderMaterial } from "three";
-import fragmentInside from "./frag_inside.glsl?raw";
+import fragment from "./frag.glsl?raw";
 import vertex from "./vertex.glsl?raw";
-import { Script } from "../../Framework/Components/Script";
+import { Script } from "../../../Framework/Components/Script";
 
 export class Atmosphere extends Script {
   _initialSkyColor = new Color(0, 0.5, 1);
@@ -20,7 +20,7 @@ export class Atmosphere extends Script {
 
     this._materials[0].material = new ShaderMaterial({
       vertexShader: vertex,
-      fragmentShader: fragmentInside,
+      fragmentShader: fragment,
       side: BackSide,
       blending: AdditiveBlending,
       transparent: true,

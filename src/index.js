@@ -1,25 +1,18 @@
 import Renderer from "./App/Framework/Systems/Renderer";
-import { LoadingManager, Mesh, SphereGeometry, Vector3 } from "three";
+import { LoadingManager } from "three";
 import { assets } from "./App/assets";
-import { Astronaut } from "./App/GameObjects/Astronaut";
-import { Rocket } from "./App/GameObjects/Rocket";
-import { Planet } from "./App/GameObjects/Planet/Planet";
 import { Postprocessing } from "./App/Postprocessing";
 import { Camera } from "./App/GameObjects/Camera";
-import { Rose } from "./App/GameObjects/Rose";
-import { Star } from "./App/GameObjects/Star";
-import { Alien } from "./App/GameObjects/Alien";
-import { AnimatedGameObject, MeshObject, Resources } from "./App/Framework";
+import { Resources } from "./App/Framework";
 import { GameLoop } from "./App/Framework/GameLoop";
 import { Scriptable } from "./App/Framework/Systems/Scriptable";
-import { ResourceMeshObject } from "./App/Framework/Components/ResourceMeshObject";
-import { Atmosphere } from "./App/GameObjects/Planet/Atmosphere";
 import { Lighting } from "./App/GameObjects/Lighting";
 import { Physics } from "./App/Framework/Systems/Physics";
-import { RigidBody } from "./App/Framework/Components/RigidBody";
-import { ShpereCollisionShape } from "./App/Framework/Components/CollisionShapes/Sphere";
-import { CapsuleCollisionShape } from "./App/Framework/Components/CollisionShapes/Capsule";
-import { ConvexHullCollisionShape } from "./App/Framework/Components/CollisionShapes/ConvexHull";
+import { createRocket } from "./App/GameObjects/Rocket/Entity";
+import { createAtmosphere, createPlanet } from "./App/GameObjects/Planet/Entity";
+import { createStar } from "./App/GameObjects/Star/Entity";
+import { createAstronaut } from "./App/GameObjects/Astronaut/Entity";
+import { createRose } from "./App/GameObjects/Rose/Entity";
 
 const autoplay = true;
 
@@ -57,76 +50,17 @@ gameLoop.addSystem(renderer);
 gameLoop.addSystem(physics);
 
 // Entities
-const astronaut = gameLoop.createEntity("astronaut");
-astronaut.addComponent(
-  "animated_mesh",
-  new AnimatedGameObject("astronaut_anim", astronaut)
-);
-astronaut.addComponent("script", Astronaut);
-astronaut.addComponent(
-  "rigid_body",
-  new RigidBody(
-    {
-      mass: 1,
-      collisionShape: new CapsuleCollisionShape(0.4, 0.3, true),
-      offset: new Vector3(0, -0.4, 0),
-      friction: 0.5
-    },
-    astronaut
-  )
-);
+// Creating game entities from "factories"
+const astronaut = createAstronaut(gameLoop);
+createPlanet(gameLoop);
+createAtmosphere(gameLoop);
+const rocket = createRocket(gameLoop);
+const rose = createRose(gameLoop);
+const star = createStar(gameLoop);
 
-const planet = gameLoop.createEntity("planet");
-planet.addComponent("mesh", new ResourceMeshObject("planet"));
-planet.addComponent("script", Planet);
-planet.addComponent(
-  "rigid_body",
-  new RigidBody(
-    {
-      mass: 0,
-      collisionShape: new ShpereCollisionShape(11, true)
-    },
-    planet
-  )
-);
-
-const rocket = gameLoop.createEntity("rocket");
-rocket.addComponent("mesh", new ResourceMeshObject("rocket"));
-rocket.addComponent(
-  "rigid_body",
-  new RigidBody(
-    {
-      mass: 1
-      // collisionShape: new CapsuleCollisionShape(0.5, 1, true),
-      // collisionShape: new ConvexHullCollisionShape(rocket.getComponent("mesh").getModel(), 1, true),
-      // offset: new Vector3(0, -1, 0)
-    },
-    rocket
-  )
-);
-rocket.addComponent("script", Rocket);
-
-const rose = gameLoop.createEntity("rose");
-rose.addComponent("mesh", new ResourceMeshObject("rose"));
-rose.addComponent("script", Rose);
-
-const star = gameLoop.createEntity("star");
-star.addComponent("mesh", new ResourceMeshObject("star"));
-star.addComponent("script", Star);
-
-// const alien = gameLoop.createEntity("alien");
-// alien.addComponent("mesh", new ResourceMeshObject("alien"));
-// alien.addComponent("script", Alien);
-
-const atmosphere = gameLoop.createEntity("atmosphere");
-atmosphere.addComponent(
-  "mesh",
-  new MeshObject(new Mesh(new SphereGeometry(20, 100, 100)))
-);
-atmosphere.addComponent("script", Atmosphere);
 
 // Lighting entity
-const lighting = gameLoop.createEntity("alien");
+const lighting = gameLoop.createEntity("lighting");
 lighting.addComponent("node", Lighting);
 
 // Assign entities to systems
@@ -155,9 +89,7 @@ renderer.load();
 scriptable.ready();
 
 const startApp = () => {
-  setTimeout(() => {
-    loadingElem.style.opacity = 0;
-  }, 500);
+  loadingElem.style.opacity = 0;
   gameLoop.loop();
 };
 

@@ -11,6 +11,7 @@ export class Physics extends System {
     await AmmoLib.bind(window)();
     this.setupPhysicsWorld();
     this.handleEvents();
+    this.setUiHelperMeshVisible(this._uiHelperMesh);
   }
 
   process(deltaTime, elapsedTime) {

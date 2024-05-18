@@ -1,5 +1,5 @@
 import { Color, PointLight } from "three";
-import { Script } from "../Framework/Components/Script";
+import { Script } from "../../Framework/Components/Script";
 
 export class Star extends Script {
   _materials;

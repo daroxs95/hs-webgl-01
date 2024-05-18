@@ -10,7 +10,7 @@ export class ConvexHullCollisionShape extends CollisionShape {
     // .applyQuaternion(model.quaternion);
     const inverseRotationMatrix = new Matrix4();
     inverseRotationMatrix.makeRotationFromQuaternion(model.quaternion).invert();
-    mergedGeometry.applyMatrix4(inverseRotationMatrix);
+    // mergedGeometry.applyMatrix4(inverseRotationMatrix);
 
     const helperMesh = new Mesh(mergedGeometry, collisionHelperMeshShader);
     super(helperMesh, helperVisible);
