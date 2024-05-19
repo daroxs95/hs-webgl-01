@@ -5,8 +5,11 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 
 export class ConvexHullCollisionShape extends CollisionShape {
   constructor(model, helperVisible) {
-    const mergedGeometry = getMergedGeometry(model)
-      .scale(model.scale.x, model.scale.y, model.scale.z);
+    const mergedGeometry = getMergedGeometry(model).scale(
+      model.scale.x,
+      model.scale.y,
+      model.scale.z,
+    );
     // .applyQuaternion(model.quaternion);
     const inverseRotationMatrix = new Matrix4();
     inverseRotationMatrix.makeRotationFromQuaternion(model.quaternion).invert();

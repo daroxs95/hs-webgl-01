@@ -9,7 +9,7 @@ import {
   ToneMappingEffect,
   ToneMappingMode,
   FXAAEffect,
-  BlurPass
+  BlurPass,
 } from "postprocessing";
 import { FloatType } from "three";
 import { lerp, smoothstep } from "three/src/math/MathUtils";
@@ -24,7 +24,7 @@ export class Postprocessing extends BasePostprocessing {
 
   onLoad() {
     this._composer = new EffectComposer(this._gl, {
-      frameBufferType: FloatType
+      frameBufferType: FloatType,
     });
     this._renderPass = new RenderPass(this._scene, this._camera);
 
@@ -45,11 +45,11 @@ export class Postprocessing extends BasePostprocessing {
         levels: 1,
         luminanceThreshold: 0.9,
         luminanceSmoothing: 0.75,
-        intensity: 0.25
+        intensity: 0.25,
       }),
       new ToneMappingEffect({
-        mode: ToneMappingMode.OPTIMIZED_CINEON
-      })
+        mode: ToneMappingMode.OPTIMIZED_CINEON,
+      }),
     );
     this._composer.addPass(this._renderPass);
     this._composer.addPass(effectPass);
@@ -71,12 +71,12 @@ export class Postprocessing extends BasePostprocessing {
     this._caEffect.offset.x = lerp(
       this._caEffect.offset.x,
       amount,
-      deltaTime * this._dampFactor
+      deltaTime * this._dampFactor,
     );
     this._caEffect.offset.y = lerp(
       this._caEffect.offset.y,
       amount,
-      deltaTime * this._dampFactor
+      deltaTime * this._dampFactor,
     );
   }
 }

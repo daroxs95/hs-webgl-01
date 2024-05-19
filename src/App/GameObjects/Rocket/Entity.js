@@ -4,6 +4,7 @@ import { CapsuleCollisionShape } from "../../Framework/Components/CollisionShape
 import { ConvexHullCollisionShape } from "../../Framework/Components/CollisionShapes/ConvexHull";
 import { Vector3 } from "three";
 import { Rocket } from "./Script";
+import { BoxCollisionShape } from "../../Framework/Components/CollisionShapes/Box";
 
 export function createRocket(ecs) {
   const rocket = ecs.createEntity("rocket");
@@ -14,11 +15,12 @@ export function createRocket(ecs) {
       {
         mass: 1,
         // collisionShape: new CapsuleCollisionShape(0.5, 1, true),
-        collisionShape: new ConvexHullCollisionShape(rocket.getComponent("mesh").getModel(), 1, true),
-        offset: new Vector3(0, -1, 0)
+        // collisionShape: new ConvexHullCollisionShape(rocket.getComponent("mesh").getModel(), 1, true),
+        collisionShape: new BoxCollisionShape(1, 2, 1, true),
+        offset: new Vector3(0, -1, 0),
       },
-      rocket
-    )
+      rocket,
+    ),
   );
   rocket.addComponent("script", Rocket);
 

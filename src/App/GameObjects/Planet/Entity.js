@@ -4,6 +4,7 @@ import { RigidBody } from "../../Framework/Components/RigidBody";
 import { MeshObject } from "../../Framework";
 import { Mesh, SphereGeometry } from "three";
 import { Atmosphere } from "./Atmosphere/Script";
+import { ShpereCollisionShape } from "../../Framework/Components/CollisionShapes/Sphere";
 
 export function createPlanet(ecs) {
   const planet = ecs.createEntity("planet");
@@ -13,11 +14,11 @@ export function createPlanet(ecs) {
     "rigid_body",
     new RigidBody(
       {
-        mass: 0
-        // collisionShape: new ShpereCollisionShape(11, true)
+        mass: 0,
+        collisionShape: new ShpereCollisionShape(11, true),
       },
-      planet
-    )
+      planet,
+    ),
   );
 
   return planet;
@@ -27,7 +28,7 @@ export function createAtmosphere(ecs) {
   const atmosphere = ecs.createEntity("atmosphere");
   atmosphere.addComponent(
     "mesh",
-    new MeshObject(new Mesh(new SphereGeometry(20, 100, 100)))
+    new MeshObject(new Mesh(new SphereGeometry(20, 100, 100))),
   );
   atmosphere.addComponent("script", Atmosphere);
 

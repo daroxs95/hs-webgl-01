@@ -11,7 +11,6 @@ export class Physics extends System {
     await AmmoLib.bind(window)();
     this.setupPhysicsWorld();
     this.handleEvents();
-    this.setUiHelperMeshVisible(this._uiHelperMesh);
   }
 
   process(deltaTime, elapsedTime) {
@@ -20,8 +19,8 @@ export class Physics extends System {
     for (let i = 0; i < this._entities.length; i++) {
       const rigidBody = this._entities[i].getComponent("rigid_body");
       const mesh =
-        this._entities[i].getComponent("mesh")
-        ?? this._entities[i].getComponent("animated_mesh");
+        this._entities[i].getComponent("mesh") ??
+        this._entities[i].getComponent("animated_mesh");
       if (rigidBody) {
         const objAmmo = rigidBody.getRigidBody();
         const helperMesh = rigidBody.getCollisionShapeHelper();
@@ -54,7 +53,7 @@ export class Physics extends System {
       dispatcher,
       overlappingPairCache,
       solver,
-      collisionConfiguration
+      collisionConfiguration,
     );
     this._world.setGravity(new Ammo.btVector3(0, 0, 0));
     this._tmpTrans = new Ammo.btTransform();
@@ -68,6 +67,8 @@ export class Physics extends System {
         this._world.addRigidBody(rigidBody.getRigidBody());
       }
     }
+
+    this.setUiHelperMeshVisible(this._uiHelperMesh);
   }
 
   setGravity(x, y, z) {
@@ -76,7 +77,9 @@ export class Physics extends System {
 
   setUiHelperMeshVisible(value) {
     for (let i = 0; i < this._entities.length; i++) {
-      this._entities[i].getComponent("rigid_body")?.setUiHelperMeshVisible(value);
+      this._entities[i]
+        .getComponent("rigid_body")
+        ?.setUiHelperMeshVisible(value);
     }
   }
 

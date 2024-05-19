@@ -8,7 +8,7 @@ export function createAstronaut(ecs) {
   const astronaut = ecs.createEntity("astronaut");
   astronaut.addComponent(
     "animated_mesh",
-    new AnimatedGameObject("astronaut_anim", astronaut)
+    new AnimatedGameObject("astronaut_anim", astronaut),
   );
   astronaut.addComponent("script", Astronaut);
   astronaut.addComponent(
@@ -19,10 +19,10 @@ export function createAstronaut(ecs) {
         collisionShape: new CapsuleCollisionShape(0.4, 0.3, true),
         // collisionShape: new ShpereCollisionShape(0.4, true),
         offset: new Vector3(0, -0.4, 0),
-        friction: 0.5
+        friction: 0.5,
       },
-      astronaut
-    )
+      astronaut,
+    ),
   );
 
   return astronaut;

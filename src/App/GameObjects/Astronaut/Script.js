@@ -27,46 +27,66 @@ export class Astronaut extends Script {
 
   onReady() {
     this._rigidBody = this._entity.getComponent("rigid_body").getRigidBody();
-    this._rigidBodyTransform = this._entity.getComponent("rigid_body").getTransform();
+    this._rigidBodyTransform = this._entity
+      .getComponent("rigid_body")
+      .getTransform();
   }
 
   onUpdate(deltaTime, elapsedTime) {
-    const gravity = new Vector3(0, 0, 0)
+    const planetPosition = new Vector3(0, 0, 0);
+    const gravity = planetPosition
+      .clone()
       .sub(this._transform.position)
       .normalize()
       .multiplyScalar(4);
 
-    const movementVelocity = new Vector3(
-      0,
-      0,
-      -1
+    // const movementVelocity = new Vector3(
+    //   Math.cos(this._transform.rotation.y) * this._movementAxis.x * -1,
+    //   Math.cos(this._transform.rotation.x) * this._movementAxis.y,
+    //   Math.cos(this._transform.rotation.z) * this._movementAxis.z
+    // );
+
+    // this.player.position.x -= this.moveSpeed * Math.sin( this.player.rotation.y );
+    // this.player.position.z -= this.moveSpeed * Math.cos( this.player.rotation.y );
+
+    // movementVelocity.multiplyScalar(this._movementSpeed);
+
+    // gravity.add(movementVelocity);
+    this._rigidBody.setLinearVelocity(
+      new Ammo.btVector3(gravity.x, gravity.y, gravity.z),
     );
-    console.log(movementVelocity);
-    // movementVelocity.applyQuaternion(this._transform.quaternion);
 
-    // Apply movement axis on model local space
-    movementVelocity.multiplyScalar(this._movementAxis.z * this._movementSpeed);
+    // level on planet
+    // const a = gravity.clone().multiplyScalar(-1).normalize();
+    // const q = new Quaternion().setFromUnitVectors(this._transform.up, a).multiply(new Quaternion().setFromEuler(this._transform.rotation));
 
-    gravity.add(movementVelocity);
-    this._rigidBody.setLinearVelocity(new Ammo.btVector3(gravity.x, gravity.y, gravity.z));
+    // const tr = new Ammo.btTransform();
+    // tr.setOrigin(new Ammo.btVector3(this._transform.position.x, this._transform.position.y, this._transform.position.z));
+    // const quat = new Ammo.btQuaternion(q.x, q.y, q.z, q.w);
+    // tr.setRotation(quat);
+    // this._rigidBody.setCenterOfMassTransform(tr);
 
-    const astronautQuaternion = this._transform.quaternion.clone();
-    const planetPosition = new Vector3(0, 0, 0);
-    // make y local axis point to the planet
-    const astronautUp = new Vector3(0, 1, 0).applyQuaternion(astronautQuaternion);
-    const planetUp = new Vector3(0, 1, 0);
-    const axis = astronautUp.clone().cross(planetUp);
-    const angle = astronautUp.angleTo(planetUp);
-    const quaternion = new Quaternion().setFromAxisAngle(axis, angle);
+    // this._rigidBodyTransform.setRotation(
+    //   new Ammo.btQuaternion(q._x, q._y, q._z, q._w)
+    // );
 
-    this._rigidBodyTransform.setRotation(
-      new Ammo.btQuaternion(
-        quaternion.x,
-        quaternion.y,
-        quaternion.z,
-        quaternion.w
-      )
-    );
+    // const astronautQuaternion = this._transform.quaternion.clone();
+    // const planetPosition = new Vector3(0, 0, 0);
+    // // make y local axis point to the planet
+    // const astronautUp = new Vector3(0, 1, 0).applyQuaternion(astronautQuaternion);
+    // const planetUp = new Vector3(0, 1, 0);
+    // const axis = astronautUp.clone().cross(planetUp);
+    // const angle = astronautUp.angleTo(planetUp);
+    // const quaternion = new Quaternion().setFromAxisAngle(axis, angle);
+    //
+    // this._rigidBodyTransform.setRotation(
+    //   new Ammo.btQuaternion(
+    //     quaternion.x,
+    //     quaternion.y,
+    //     quaternion.z,
+    //     quaternion.w
+    //   )
+    // );
   }
 
   onKeyDown(e) {

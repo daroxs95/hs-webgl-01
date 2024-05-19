@@ -1,8 +1,9 @@
 import {
+  AxesHelper,
   PCFSoftShadowMap,
   PerspectiveCamera,
   Scene,
-  WebGLRenderer
+  WebGLRenderer,
 } from "three";
 import Stats from "stats.js";
 import { System } from "../ECS";
@@ -16,6 +17,7 @@ export default class Renderer extends System {
   _gameObjects;
   _composer;
   _renderer;
+  _axesHelper;
 
   constructor(Composer) {
     super();
@@ -35,7 +37,7 @@ export default class Renderer extends System {
       canvas: document.querySelector("#canvas"),
       antialias: window.devicePixelRatio <= 1,
       stencil: true,
-      depth: true
+      depth: true,
     });
 
     // Renderer
@@ -158,6 +160,16 @@ export default class Renderer extends System {
         gameObject.onMouseMove(e);
       }
     });
+
+    // add scroll events
+    window.addEventListener("wheel", (e) => {
+      for (let i = 0; i < this._entities.length; i++) {
+        this._entities[i].getComponent("script")?.onMouseScroll(e);
+      }
+      for (const gameObject of this._gameObjects) {
+        gameObject.onMouseScroll(e);
+      }
+    });
   }
 
   setCamera(camera) {
@@ -195,5 +207,14 @@ export default class Renderer extends System {
 
   getGlInstance() {
     return this._gl;
+  }
+
+  showAxesHelper(value) {
+    if (value) {
+      this._axesHelper = new AxesHelper(5);
+      this._scene.add(this._axesHelper);
+    } else {
+      this._scene.remove(this._axesHelper);
+    }
   }
 }

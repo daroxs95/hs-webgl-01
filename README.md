@@ -41,3 +41,4 @@ npm run dev
 - [ ] Add motion blur
 - [ ] Add abstraction for mouse and keys input
 - [ ] Move camera following planet orbit
+- [ ] Fix physics engine

@@ -9,12 +9,15 @@ import { Scriptable } from "./App/Framework/Systems/Scriptable";
 import { Lighting } from "./App/GameObjects/Lighting";
 import { Physics } from "./App/Framework/Systems/Physics";
 import { createRocket } from "./App/GameObjects/Rocket/Entity";
-import { createAtmosphere, createPlanet } from "./App/GameObjects/Planet/Entity";
-import { createStar } from "./App/GameObjects/Star/Entity";
+import {
+  createAtmosphere,
+  createPlanet,
+} from "./App/GameObjects/Planet/Entity";
+import { createStarFactory } from "./App/GameObjects/Star/Entity";
 import { createAstronaut } from "./App/GameObjects/Astronaut/Entity";
 import { createRose } from "./App/GameObjects/Rose/Entity";
 
-const autoplay = true;
+const autoplay = false;
 
 const manager = new LoadingManager();
 
@@ -56,8 +59,8 @@ createPlanet(gameLoop);
 createAtmosphere(gameLoop);
 const rocket = createRocket(gameLoop);
 const rose = createRose(gameLoop);
-const star = createStar(gameLoop);
-
+// const star = createStar(gameLoop);
+const stars = createStarFactory(gameLoop, 4);
 
 // Lighting entity
 const lighting = gameLoop.createEntity("lighting");
@@ -76,11 +79,11 @@ physics.collectObjects();
 const camera = new Camera(
   [
     astronaut.getComponent("animated_mesh"),
-    star.getComponent("mesh"),
+    // star.getComponent("mesh"),
     rose.getComponent("mesh"),
-    rocket.getComponent("mesh")
+    rocket.getComponent("mesh"),
   ],
-  renderer
+  renderer,
 );
 
 renderer.registerGameObject(camera);

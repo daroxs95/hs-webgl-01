@@ -11,12 +11,12 @@ export class RigidBody extends GameObject {
   _mass = 0;
   _collisionShape;
   _posOffset = new Vector3(0, 0, 0);
-  _friction = 4;
+  _friction = 10;
   _helperVisible = false;
 
   constructor(
     { mass, collisionShape, offset, friction, helperVisible },
-    entity
+    entity,
   ) {
     super(entity);
 
@@ -33,7 +33,7 @@ export class RigidBody extends GameObject {
       this._entity.getComponent("animated_mesh")?._model ?? {
         position: { x: 0, y: 0, z: 0 },
         scale: { x: 1, y: 1, z: 1 },
-        quaternion: { x: 0, y: 0, z: 0, w: 1 }
+        quaternion: { x: 0, y: 0, z: 0, w: 1 },
       };
 
     let pos = mesh.position.clone().add(this._posOffset);
@@ -44,7 +44,7 @@ export class RigidBody extends GameObject {
     this._transform.setIdentity();
     this._transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
     this._transform.setRotation(
-      new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w)
+      new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w),
     );
 
     let motionState = new Ammo.btDefaultMotionState(this._transform);
@@ -52,11 +52,11 @@ export class RigidBody extends GameObject {
     if (!this._collisionShape) {
       this._collisionShape = new ConvexHullCollisionShape(
         mesh,
-        this._helperVisible
+        this._helperVisible,
       );
     }
     const colShape = this._collisionShape.getShape();
-    colShape.setMargin(0.05);
+    colShape.setMargin(0.005);
 
     let localInertia = new Ammo.btVector3(0, 0, 0);
     colShape.calculateLocalInertia(this._mass, localInertia);
@@ -65,7 +65,7 @@ export class RigidBody extends GameObject {
       this._mass,
       motionState,
       colShape,
-      localInertia
+      localInertia,
     );
     this._rigidBody = new Ammo.btRigidBody(rbInfo);
     this._rigidBody.setActivationState(STATE.DISABLE_DEACTIVATION);

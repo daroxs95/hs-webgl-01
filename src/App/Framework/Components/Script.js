@@ -12,4 +12,6 @@ export class Script extends Component {
   onKeyUp(e) {}
 
   onMouseMove(e) {}
+
+  onMouseScroll(e) {}
 }

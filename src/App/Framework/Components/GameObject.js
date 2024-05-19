@@ -10,4 +10,6 @@ export class GameObject extends Component {
   onKeyUp(e) {}
 
   onMouseMove(e) {}
+
+  onMouseScroll(e) {}
 }

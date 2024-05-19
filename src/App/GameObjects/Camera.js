@@ -6,7 +6,7 @@ export class Camera extends GameObject {
   _camera;
   _appComposer;
   _mouse = { x: 0, y: 0 };
-  _initialPosition = new Vector3(0, 350, 2.5);
+  _initialPosition = new Vector3(0, 150, 2.5);
   _moveSpeed = 2;
   _moveAmount = 0.25;
   _orbitControls;
@@ -20,8 +20,9 @@ export class Camera extends GameObject {
 
   _lastPosition = new Vector3();
   _moveDirection = new Vector3();
-  _modelOffset = new Vector3(1, 3, 2.5);
+  _modelOffset = new Vector3(10, 10, 10.5);
   _targetObejct = new Vector3();
+  _zoomSpeed = 3;
 
   constructor(focusObjects, renderer) {
     super();
@@ -36,7 +37,10 @@ export class Camera extends GameObject {
   onLoad() {
     this._camera.position.copy(this._initialPosition);
 
-    this._orbitControls = new OrbitControls(this._camera, this._renderer.domElement);
+    this._orbitControls = new OrbitControls(
+      this._camera,
+      this._renderer.domElement,
+    );
     this._orbitControls.enabled = !this._controlEnabled;
 
     const prevBtn = document.querySelector("#slider-prev");
@@ -48,7 +52,7 @@ export class Camera extends GameObject {
       this.focusNext();
     });
     const playBtn = document.querySelector("#start_game");
-    playBtn.addEventListener("click", () => {
+    playBtn?.addEventListener("click", () => {
       this.lockOnChar();
       playBtn.style.opacity = 0;
       nextBtn.style.opacity = 0;
@@ -59,7 +63,9 @@ export class Camera extends GameObject {
   lockOnChar() {
     this._isInGame = true;
     this._modelOffset.set(0, 2, -2);
-    const focusObjectScript = this._focusObject.getEntity().getComponent("script");
+    const focusObjectScript = this._focusObject
+      .getEntity()
+      .getComponent("script");
     if (focusObjectScript.setControlled) focusObjectScript.setControlled(true);
   }
 
@@ -94,7 +100,7 @@ export class Camera extends GameObject {
       directionToTarget
         .subVectors(
           this._focusObject.getModel().position,
-          this._camera.position
+          this._camera.position,
         )
         .normalize();
       const currentDirection = new Vector3();
@@ -103,7 +109,7 @@ export class Camera extends GameObject {
       newDirection.lerpVectors(
         currentDirection,
         directionToTarget,
-        this._moveSpeed * deltaTime
+        this._moveSpeed * deltaTime,
       );
       this._camera.lookAt(this._camera.position.clone().add(newDirection));
     }
@@ -115,8 +121,8 @@ export class Camera extends GameObject {
     this._appComposer?.setCameraSpeed(this._realSpeed);
     this._isInsideOrbit =
       this._camera.position.distanceTo(this._focusObject.getModel().position) <
-      10;
-    this._moveSpeed = this._isInsideOrbit ? 6 : 100;
+      40;
+    this._moveSpeed = this._isInsideOrbit ? 10 : 50;
     this._appComposer?.toggleChromaticAberration(this._isInsideOrbit);
   }
 
@@ -134,8 +140,8 @@ export class Camera extends GameObject {
     const index = this._focusObjects.indexOf(this._focusObject);
     this._focusObject =
       this._focusObjects[
-      (index - 1 + this._focusObjects.length) % this._focusObjects.length
-        ];
+        (index - 1 + this._focusObjects.length) % this._focusObjects.length
+      ];
   }
 
   onMouseMove(e) {
@@ -157,5 +163,23 @@ export class Camera extends GameObject {
 
   addFocusObject(focusObject) {
     this._focusObjects.push(focusObject);
+  }
+
+  onMouseScroll(e) {
+    if (this._isInGame) return;
+
+    const directionToTarget = new Vector3();
+    directionToTarget
+      .subVectors(this._focusObject.getModel().position, this._camera.position)
+      .normalize()
+      .multiplyScalar(this._zoomSpeed);
+
+    if (e.deltaY < 0) {
+      // zoom in camera
+      this._modelOffset.add(directionToTarget);
+    } else {
+      // zoom out camera
+      this._modelOffset.sub(directionToTarget);
+    }
   }
 }
